@@ -16,3 +16,19 @@ Patient Registration, Test Master, Department Master, Profiles, Result Entry, Re
 
 ## Developer
 Shukran
+
+
+## Database setup
+Run the SQL scripts in the `database` folder in numeric order (001 onward) in SQL Server Management Studio.
+The default application connection is `.SQLEXPRESS`. Change `src/LabMaster/Data/Database.cs` if your SQL Server instance uses another name.
+
+## Current foundation
+- Login and role-based user foundation
+- Patient registration/search
+- Test acceptance and order creation
+- F3-style result entry with critical result warning
+- Previous-result service
+- Reports and verification foundation
+- Billing foundation
+- Database backup foundation
+- Test/profile/department master foundation
