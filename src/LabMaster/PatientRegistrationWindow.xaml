@@ -1,0 +1,14 @@
+<Window x:Class="LabMaster.PatientRegistrationWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Patient Registration" Height="600" Width="850" WindowStartupLocation="CenterOwner" Background="{StaticResource BackgroundBrush}">
+<Grid Margin="28"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+<StackPanel><TextBlock Text="Patient Registration" Foreground="White" FontSize="28" FontWeight="SemiBold"/><TextBlock Text="Register patient and create MR number" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,20"/></StackPanel>
+<Border Grid.Row="1" Background="{StaticResource CardBrush}" CornerRadius="10" Padding="22"><Grid>
+<Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+<TextBlock Text="MR Number" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="MrBox" Grid.Row="1" Height="36" Margin="0,5,12,15" IsReadOnly="True"/>
+<TextBlock Grid.Column="1" Text="Patient Name *" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="NameBox" Grid.Row="1" Grid.Column="1" Height="36" Margin="0,5,0,15"/>
+<TextBlock Grid.Row="2" Text="Father / Husband Name" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="FatherBox" Grid.Row="3" Height="36" Margin="0,5,12,15"/>
+<TextBlock Grid.Row="2" Grid.Column="1" Text="Gender" Foreground="{StaticResource MutedTextBrush}"/><ComboBox x:Name="GenderBox" Grid.Row="3" Grid.Column="1" Height="36" Margin="0,5,0,15"><ComboBoxItem Content="Male" IsSelected="True"/><ComboBoxItem Content="Female"/><ComboBoxItem Content="Other"/></ComboBox>
+<TextBlock Grid.Row="4" Text="Phone" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="PhoneBox" Grid.Row="5" Height="36" Margin="0,5,12,0"/>
+<TextBlock Grid.Row="4" Grid.Column="1" Text="Referring Doctor" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="DoctorBox" Grid.Row="5" Grid.Column="1" Height="36" Margin="0,5,0,0"/>
+</Grid></Border>
+<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0"><Button Content="Clear" Width="100" Height="40" Margin="0,0,10,0" Click="Clear_Click"/><Button Content="Save Patient" Width="140" Height="40" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" Click="Save_Click"/></StackPanel>
+</Grid></Window>
