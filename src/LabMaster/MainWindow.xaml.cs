@@ -8,4 +8,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void PatientRegistration_Click(object sender, RoutedEventArgs e)
+    {
+        var window = new PatientRegistrationWindow
+        {
+            Owner = this
+        };
+        window.ShowDialog();
+    }
 }
