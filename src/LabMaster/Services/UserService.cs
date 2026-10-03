@@ -1,0 +1,10 @@
+using LabMaster.Data;
+using Microsoft.Data.SqlClient;
+namespace LabMaster.Services;
+public sealed class UserService
+{
+ public async Task<List<UserRow>> GetAsync(){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="SELECT UserId,UserName,DisplayName,RoleName,IsActive FROM dbo.Users ORDER BY UserName";await using var cmd=new SqlCommand(s,c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<UserRow>();while(await r.ReadAsync())x.Add(new UserRow(r.GetInt32(0),r.GetString(1),r.GetString(2),r.GetString(3),r.GetBoolean(4)));return x;}
+ public async Task AddAsync(string user,string display,string password,string role){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="INSERT dbo.Users(UserName,DisplayName,PasswordHash,RoleName) VALUES(@u,@d,@p,@r)";await using var cmd=new SqlCommand(s,c);cmd.Parameters.AddWithValue("@u",user.Trim());cmd.Parameters.AddWithValue("@d",display.Trim());cmd.Parameters.AddWithValue("@p",AuthenticationService.HashPassword(password));cmd.Parameters.AddWithValue("@r",role);await cmd.ExecuteNonQueryAsync();}
+ public async Task SetActiveAsync(int id,bool active){await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("UPDATE dbo.Users SET IsActive=@a WHERE UserId=@id",c);cmd.Parameters.AddWithValue("@a",active);cmd.Parameters.AddWithValue("@id",id);await cmd.ExecuteNonQueryAsync();}
+}
+public record UserRow(int UserId,string UserName,string DisplayName,string RoleName,bool IsActive);
