@@ -2,13 +2,21 @@
 <Grid Margin="28"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
 <StackPanel><TextBlock Text="Patient Registration" Foreground="White" FontSize="28" FontWeight="SemiBold"/><TextBlock Text="Register patient and create MR number" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,20"/></StackPanel>
 <Border Grid.Row="1" Background="{StaticResource CardBrush}" CornerRadius="10" Padding="22"><Grid>
-<Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+<Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
 <TextBlock Text="MR Number" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="MrBox" Grid.Row="1" Height="36" Margin="0,5,12,15" IsReadOnly="True"/>
 <TextBlock Grid.Column="1" Text="Patient Name *" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="NameBox" Grid.Row="1" Grid.Column="1" Height="36" Margin="0,5,0,15"/>
 <TextBlock Grid.Row="2" Text="Father / Husband Name" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="FatherBox" Grid.Row="3" Height="36" Margin="0,5,12,15"/>
 <TextBlock Grid.Row="2" Grid.Column="1" Text="Gender" Foreground="{StaticResource MutedTextBrush}"/><ComboBox x:Name="GenderBox" Grid.Row="3" Grid.Column="1" Height="36" Margin="0,5,0,15"><ComboBoxItem Content="Male" IsSelected="True"/><ComboBoxItem Content="Female"/><ComboBoxItem Content="Other"/></ComboBox>
-<TextBlock Grid.Row="4" Text="Phone" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="PhoneBox" Grid.Row="5" Height="36" Margin="0,5,12,0"/>
-<TextBlock Grid.Row="4" Grid.Column="1" Text="Referring Doctor" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="DoctorBox" Grid.Row="5" Grid.Column="1" Height="36" Margin="0,5,0,0"/>
-</Grid></Border>
+<TextBlock Grid.Row="4" Text="Date of Birth" Foreground="{StaticResource MutedTextBrush}"/><DatePicker x:Name="DobBox" Grid.Row="5" Height="36" Margin="0,5,12,15"/>
+<TextBlock Grid.Row="4" Grid.Column="1" Text="Age (Years / Months / Days)" Foreground="{StaticResource MutedTextBrush}"/>
+<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,15">
+<TextBox x:Name="AgeYearsBox" Width="70" Height="36" ToolTip="Years"/><TextBlock Text=" Y" Foreground="White" VerticalAlignment="Center" Margin="4,0,10,0"/>
+<TextBox x:Name="AgeMonthsBox" Width="70" Height="36" ToolTip="Months"/><TextBlock Text=" M" Foreground="White" VerticalAlignment="Center" Margin="4,0,10,0"/>
+<TextBox x:Name="AgeDaysBox" Width="70" Height="36" ToolTip="Days"/><TextBlock Text=" D" Foreground="White" VerticalAlignment="Center" Margin="4,0,0,0"/>
+</StackPanel>
+<TextBlock Grid.Row="6" Text="Phone" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="PhoneBox" Grid.Row="7" Height="36" Margin="0,5,12,0"/>
+<TextBlock Grid.Row="6" Grid.Column="1" Text="Referring Doctor" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="DoctorBox" Grid.Row="7" Grid.Column="1" Height="36" Margin="0,5,0,0"/>
+<TextBlock Grid.Row="8" Text="Address" Foreground="{StaticResource MutedTextBrush}"/><TextBox x:Name="AddressBox" Grid.Row="9" Height="36" Margin="0,5,12,0"/>
+<TextBlock Grid.Row="8" Grid.Column="1" Text="Registration" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Grid.Row="9" Grid.Column="1" Text="Patient record will be stored in SQL Server" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/></Grid></Border>
 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0"><Button Content="Clear" Width="100" Height="40" Margin="0,0,10,0" Click="Clear_Click"/><Button Content="Save Patient" Width="140" Height="40" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" Click="Save_Click"/></StackPanel>
 </Grid></Window>
