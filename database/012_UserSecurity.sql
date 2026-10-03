@@ -1,0 +1,16 @@
+USE LabMasterDb;
+GO
+IF OBJECT_ID('dbo.UserSessions','U') IS NULL
+BEGIN
+ CREATE TABLE dbo.UserSessions(
+  SessionId INT IDENTITY PRIMARY KEY,
+  UserId INT NOT NULL,
+  LoginAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+  LogoutAt DATETIME2 NULL,
+  CONSTRAINT FK_UserSessions_User FOREIGN KEY(UserId) REFERENCES dbo.Users(UserId)
+ );
+END
+GO
+IF COL_LENGTH('dbo.Users','PasswordHash') IS NULL ALTER TABLE dbo.Users ADD PasswordHash NVARCHAR(255) NOT NULL DEFAULT N'';
+IF COL_LENGTH('dbo.Users','RoleName') IS NULL ALTER TABLE dbo.Users ADD RoleName NVARCHAR(30) NOT NULL DEFAULT N'Technician';
+GO
