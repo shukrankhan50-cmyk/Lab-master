@@ -1,0 +1,16 @@
+USE LabMasterDb;
+GO
+IF OBJECT_ID('dbo.Payments','U') IS NULL
+BEGIN
+ CREATE TABLE dbo.Payments(
+  PaymentId INT IDENTITY PRIMARY KEY,
+  OrderId INT NOT NULL,
+  ReceiptNumber NVARCHAR(30) NOT NULL UNIQUE,
+  Amount DECIMAL(12,2) NOT NULL,
+  PaymentMethod NVARCHAR(30) NOT NULL DEFAULT 'Cash',
+  PaidAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+  ReceivedBy NVARCHAR(100) NULL,
+  CONSTRAINT FK_Payments_Orders FOREIGN KEY(OrderId) REFERENCES dbo.TestOrders(OrderId)
+ );
+END
+GO
