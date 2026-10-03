@@ -1,0 +1,61 @@
+<Window x:Class="LabMaster.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Lab Master" Height="720" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
+            <DockPanel Margin="18">
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="LAB MASTER" Foreground="{StaticResource TextBrush}" FontSize="24" FontWeight="Bold"/>
+                    <TextBlock Text="Laboratory Information System" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,4,0,28"/>
+                    <Button Content="Dashboard" Height="42" Margin="0,0,0,8" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" FontSize="14"/>
+                    <Button Content="Patient Registration" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Accept Test" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Result Entry (F3)" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Reports" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Test Master" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                </StackPanel>
+                <TextBlock DockPanel.Dock="Bottom" Text="Lab Master by Shukran" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="28">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Dashboard" Foreground="{StaticResource TextBrush}" FontSize="30" FontWeight="SemiBold"/>
+                <TextBlock Text="Laboratory overview and daily activity" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,22"/>
+            </StackPanel>
+            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,22">
+                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
+                    <StackPanel><TextBlock Text="Today's Patients" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
+                </Border>
+                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
+                    <StackPanel><TextBlock Text="Pending Tests" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
+                </Border>
+                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
+                    <StackPanel><TextBlock Text="Reports Ready" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
+                </Border>
+                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Padding="18">
+                    <StackPanel><TextBlock Text="Today's Collection" Foreground="{StaticResource MutedTextBrush}"/><TextBlock Text="Rs. 0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
+                </Border>
+            </UniformGrid>
+            <Border Grid.Row="2" Background="{StaticResource CardBrush}" CornerRadius="10" Padding="24">
+                <StackPanel>
+                    <TextBlock Text="Lab Master is ready" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Phase 1 foundation created. Next we will connect SQL Server and build Patient Registration, Test Master and the F3 Result Entry workflow." Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
