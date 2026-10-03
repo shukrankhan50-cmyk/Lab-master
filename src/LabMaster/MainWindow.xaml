@@ -18,7 +18,7 @@
                     <Button Content="Dashboard" Height="42" Margin="0,0,0,8" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" FontSize="14"/>
                     <Button Content="Patient Registration" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="PatientRegistration_Click"/><Button Content="Patient Search" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="PatientSearch_Click"/>
                     <Button Content="Accept Test" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="AcceptTest_Click"/>
-                    <Button Content="Result Entry (F3)" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Result Entry (F3)" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="ResultEntry_Click"/>
                     <Button Content="Reports" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
                     <Button Content="Test Master" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
                 </StackPanel>
