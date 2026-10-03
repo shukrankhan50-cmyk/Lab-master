@@ -16,7 +16,7 @@
                     <TextBlock Text="LAB MASTER" Foreground="{StaticResource TextBrush}" FontSize="24" FontWeight="Bold"/>
                     <TextBlock Text="Laboratory Information System" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,4,0,28"/>
                     <Button Content="Dashboard" Height="42" Margin="0,0,0,8" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" FontSize="14"/>
-                    <Button Content="Patient Registration" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
+                    <Button Content="Patient Registration" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="PatientRegistration_Click"/>
                     <Button Content="Accept Test" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
                     <Button Content="Result Entry (F3)" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
                     <Button Content="Reports" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13"/>
