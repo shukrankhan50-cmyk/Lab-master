@@ -7,6 +7,7 @@ namespace LabMaster;
 public partial class ReportWindow : Window
 {
     readonly ReportService service = new();
+    readonly ReportSettingsService settingsService = new();
     ReportOrder? selected;
     ReportData? report;
 
@@ -38,6 +39,12 @@ public partial class ReportWindow : Window
             await service.EnsureReportNumberAsync(selected.OrderId);
             report = await service.GetReportAsync(selected.OrderId);
             if (report == null) return;
+
+            var settings = await settingsService.GetAsync();
+            LabNameText.Text = settings.LaboratoryName;
+            LabAddressText.Text = settings.Address ?? "";
+            LabPhoneText.Text = settings.Phone ?? "";
+            FooterText.Text = settings.ReportFooter ?? "";
 
             PatientInfo.Text =
                 $"Patient: {report.PatientName}\n" +
