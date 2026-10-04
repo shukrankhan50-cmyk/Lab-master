@@ -2,6 +2,7 @@ param(
     [Parameter(Mandatory=$true)][string]$MachineId,
     [Parameter(Mandatory=$true)][string]$PrivateKeyPath,
     [int]$Days = 90
+if ($Days -ne 90) { throw "Lab Master activation keys must be exactly 90 days." }
 )
 
 $ErrorActionPreference = "Stop"
