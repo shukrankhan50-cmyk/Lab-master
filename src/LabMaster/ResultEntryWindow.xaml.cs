@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using LabMaster.Services;
 namespace LabMaster;
 public partial class ResultEntryWindow : Window
@@ -12,6 +13,7 @@ public partial class ResultEntryWindow : Window
   selected=ResultsGrid.SelectedItem as PendingResult;
   if(selected!=null){SelectedTestLabel.Text=$"{selected.MRNumber} | {selected.PatientName} | {selected.TestName}";ResultBox.Text=selected.ResultValue??"";ResultBox.Focus();}
  }
+ void Window_PreviewKeyDown(object s,KeyEventArgs e){if(e.Key==Key.F3){ResultBox.Focus();e.Handled=true;}else if(e.Key==Key.Enter && ResultBox.IsKeyboardFocusWithin){Save_Click(s,e);e.Handled=true;}}
  async void Save_Click(object s,RoutedEventArgs e)
  {
   if(selected==null){MessageBox.Show("Select a pending test.");return;}
