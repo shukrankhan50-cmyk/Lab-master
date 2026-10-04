@@ -1,0 +1,53 @@
+USE LabMasterDb;
+GO
+IF OBJECT_ID('dbo.InventoryItems','U') IS NULL
+CREATE TABLE dbo.InventoryItems(
+ InventoryItemId INT IDENTITY PRIMARY KEY,
+ ItemName NVARCHAR(150) NOT NULL,
+ Category NVARCHAR(80) NULL,
+ Unit NVARCHAR(30) NULL,
+ BatchNumber NVARCHAR(80) NULL,
+ ExpiryDate DATE NULL,
+ Quantity DECIMAL(12,2) NOT NULL DEFAULT 0,
+ MinimumStock DECIMAL(12,2) NOT NULL DEFAULT 0,
+ Supplier NVARCHAR(150) NULL,
+ IsActive BIT NOT NULL DEFAULT 1
+);
+GO
+IF OBJECT_ID('dbo.InventoryTransactions','U') IS NULL
+CREATE TABLE dbo.InventoryTransactions(
+ TransactionId INT IDENTITY PRIMARY KEY,
+ InventoryItemId INT NOT NULL,
+ TransactionType NVARCHAR(30) NOT NULL,
+ Quantity DECIMAL(12,2) NOT NULL,
+ ReferenceNo NVARCHAR(80) NULL,
+ Notes NVARCHAR(300) NULL,
+ CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+ CreatedBy NVARCHAR(100) NULL,
+ CONSTRAINT FK_InventoryTransactions_Item FOREIGN KEY(InventoryItemId) REFERENCES dbo.InventoryItems(InventoryItemId)
+);
+GO
+IF OBJECT_ID('dbo.QCMaterials','U') IS NULL
+CREATE TABLE dbo.QCMaterials(
+ QCId INT IDENTITY PRIMARY KEY,
+ TestId INT NULL,
+ MaterialName NVARCHAR(150) NOT NULL,
+ LotNumber NVARCHAR(80) NULL,
+ TargetMean DECIMAL(18,4) NULL,
+ SD DECIMAL(18,4) NULL,
+ ExpiryDate DATE NULL,
+ IsActive BIT NOT NULL DEFAULT 1,
+ CONSTRAINT FK_QCMaterials_Test FOREIGN KEY(TestId) REFERENCES dbo.Tests(TestId)
+);
+GO
+IF OBJECT_ID('dbo.QCResults','U') IS NULL
+CREATE TABLE dbo.QCResults(
+ QCResultId INT IDENTITY PRIMARY KEY,
+ QCId INT NOT NULL,
+ ResultValue DECIMAL(18,4) NULL,
+ RunDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+ EnteredBy NVARCHAR(100) NULL,
+ Comment NVARCHAR(300) NULL,
+ CONSTRAINT FK_QCResults_Material FOREIGN KEY(QCId) REFERENCES dbo.QCMaterials(QCId)
+);
+GO
