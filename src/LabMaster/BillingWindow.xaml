@@ -9,7 +9,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="260"/>
         </Grid.RowDefinitions>
 
         <StackPanel>
@@ -18,27 +18,37 @@
                        Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,18"/>
         </StackPanel>
 
-        <DataGrid x:Name="BillsGrid" Grid.Row="1"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  SelectionChanged="BillsGrid_SelectionChanged"
-                  Background="{StaticResource CardBrush}"
-                  Foreground="White"
-                  RowBackground="{StaticResource CardBrush}"
-                  AlternatingRowBackground="#243044">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Order" Binding="{Binding OrderNumber}" Width="110"/>
-                <DataGridTextColumn Header="MR" Binding="{Binding MRNumber}" Width="105"/>
-                <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="*"/>
-                <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=N2}" Width="110"/>
-                <DataGridTextColumn Header="Paid" Binding="{Binding Paid, StringFormat=N2}" Width="110"/>
-                <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat=N2}" Width="110"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <DataGrid x:Name="BillsGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionChanged="BillsGrid_SelectionChanged"
+                      Background="{StaticResource CardBrush}"
+                      Foreground="White"
+                      RowBackground="{StaticResource CardBrush}"
+                      AlternatingRowBackground="#243044">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Order" Binding="{Binding OrderNumber}" Width="110"/>
+                    <DataGridTextColumn Header="MR" Binding="{Binding MRNumber}" Width="105"/>
+                    <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="*"/>
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=N2}" Width="110"/>
+                    <DataGridTextColumn Header="Paid" Binding="{Binding Paid, StringFormat=N2}" Width="110"/>
+                    <DataGridTextColumn Header="Balance" Binding="{Binding Balance, StringFormat=N2}" Width="110"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
 
         <Border Grid.Row="2" Background="{StaticResource CardBrush}" Padding="16" Margin="0,15,0,0">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="150"/>
@@ -70,6 +80,32 @@
                 <Button Grid.Column="4" Content="Clear" Height="38"
                         VerticalAlignment="Bottom" Margin="8,0"
                         Click="Clear_Click"/>
+
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="Recent Receipts"
+                           Foreground="White" FontSize="16" FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <DataGrid x:Name="ReceiptsGrid" Grid.Row="1" Grid.ColumnSpan="3"
+                          Margin="0,8,8,0" AutoGenerateColumns="False" IsReadOnly="True"
+                          SelectionMode="Single"
+                          Background="{StaticResource CardBrush}"
+                          Foreground="White"
+                          RowBackground="{StaticResource CardBrush}"
+                          AlternatingRowBackground="#243044">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Receipt" Binding="{Binding ReceiptNumber}" Width="180"/>
+                        <DataGridTextColumn Header="Order" Binding="{Binding OrderNumber}" Width="110"/>
+                        <DataGridTextColumn Header="Patient" Binding="{Binding PatientName}" Width="*"/>
+                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" Width="100"/>
+                        <DataGridTextColumn Header="Method" Binding="{Binding PaymentMethod}" Width="90"/>
+                        <DataGridTextColumn Header="Date" Binding="{Binding PaidAt, StringFormat=dd-MMM-yyyy HH:mm}" Width="140"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Vertical" Margin="8,8,0,0">
+                    <Button Content="Refresh Receipts" Height="34" Margin="0,0,0,8" Click="RefreshReceipts_Click"/>
+                    <Button Content="Print Selected Receipt" Height="34" Click="PrintReceipt_Click"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>
