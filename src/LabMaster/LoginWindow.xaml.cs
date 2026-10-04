@@ -32,6 +32,16 @@ public partial class LoginWindow : Window
                 return;
             }
 
+            if (user.RequiresPasswordChange)
+            {
+                var setup = new ChangePasswordWindow(user) { Owner = this };
+                if (setup.ShowDialog() != true)
+                {
+                    StatusText.Text = "A new password is required before first login can continue.";
+                    return;
+                }
+            }
+
             LoggedInUser = user;
             await new AuditService().WriteAsync(
                 user.UserName,
