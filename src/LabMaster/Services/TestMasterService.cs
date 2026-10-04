@@ -26,4 +26,11 @@ public sealed class TestMasterService
  {
   await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("SELECT DepartmentId,DepartmentName FROM dbo.Departments WHERE IsActive=1 ORDER BY DepartmentName",c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<(int,string)>();while(await r.ReadAsync())x.Add((r.GetInt32(0),r.GetString(1)));return x;
  }
+ public async Task UpdateAsync(int id,string code,string name,int departmentId,string? sample,string? unit,string? range,decimal price)
+ {
+  await using var c=Database.CreateConnection();await c.OpenAsync();
+  const string sql="UPDATE dbo.Tests SET TestCode=@code,TestName=@name,DepartmentId=@dep,SampleType=@sample,Unit=@unit,ReferenceRange=@range,Price=@price WHERE TestId=@id";
+  await using var cmd=new SqlCommand(sql,c);cmd.Parameters.AddWithValue("@id",id);cmd.Parameters.AddWithValue("@code",code.Trim());cmd.Parameters.AddWithValue("@name",name.Trim());cmd.Parameters.AddWithValue("@dep",departmentId);cmd.Parameters.AddWithValue("@sample",(object?)sample??DBNull.Value);cmd.Parameters.AddWithValue("@unit",(object?)unit??DBNull.Value);cmd.Parameters.AddWithValue("@range",(object?)range??DBNull.Value);cmd.Parameters.AddWithValue("@price",price);await cmd.ExecuteNonQueryAsync();
+ }
+
 }
