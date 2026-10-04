@@ -40,6 +40,7 @@ public partial class MainWindow : Window
     private void Billing_Click(object sender, RoutedEventArgs e) { if (!Allowed("Billing")) return; new BillingWindow { Owner = this }.ShowDialog(); _ = RefreshDashboardAsync(); }
     private void ResultEntry_Click(object sender, RoutedEventArgs e) { if (!Allowed("Results")) return; new ResultEntryWindow { Owner = this }.ShowDialog(); _ = RefreshDashboardAsync(); }
     private void Reports_Click(object sender, RoutedEventArgs e) { if (!Allowed("Reports")) return; new ReportWindow { Owner = this }.ShowDialog(); _ = RefreshDashboardAsync(); }
+    private void DepartmentSlips_Click(object sender, RoutedEventArgs e) { if (!Allowed("Orders")) return; new DepartmentSlipWindow { Owner = this }.ShowDialog(); }
     private void Departments_Click(object sender, RoutedEventArgs e) { if (Allowed("MasterData")) new DepartmentWindow { Owner = this }.ShowDialog(); }
     private void Profile_Click(object sender, RoutedEventArgs e) { if (Allowed("MasterData")) new ProfileWindow { Owner = this }.ShowDialog(); }
     private void TestMaster_Click(object sender, RoutedEventArgs e) { if (Allowed("MasterData")) new TestMasterWindow { Owner = this }.ShowDialog(); }
