@@ -1,0 +1,9 @@
+using LabMaster.Data;
+using Microsoft.Data.SqlClient;
+namespace LabMaster.Services;
+public sealed class InventoryService
+{
+ public async Task<List<InventoryRow>> GetAsync(){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="SELECT InventoryItemId,ItemName,Category,Unit,BatchNumber,ExpiryDate,Quantity,MinimumStock,Supplier,IsActive FROM dbo.InventoryItems ORDER BY ItemName";await using var cmd=new SqlCommand(s,c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<InventoryRow>();while(await r.ReadAsync())x.Add(new InventoryRow(r.GetInt32(0),r.GetString(1),r.IsDBNull(2)?null:r.GetString(2),r.IsDBNull(3)?null:r.GetString(3),r.IsDBNull(4)?null:r.GetString(4),r.IsDBNull(5)?null:r.GetDateTime(5),r.GetDecimal(6),r.GetDecimal(7),r.IsDBNull(8)?null:r.GetString(8),r.GetBoolean(9)));return x;}
+ public async Task AddAsync(string name,string? category,string? unit,string? batch,DateTime? expiry,decimal quantity,decimal minimum,string? supplier){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="INSERT dbo.InventoryItems(ItemName,Category,Unit,BatchNumber,ExpiryDate,Quantity,MinimumStock,Supplier) VALUES(@n,@c,@u,@b,@e,@q,@m,@s)";await using var cmd=new SqlCommand(s,c);cmd.Parameters.AddWithValue("@n",name.Trim());cmd.Parameters.AddWithValue("@c",(object?)category??DBNull.Value);cmd.Parameters.AddWithValue("@u",(object?)unit??DBNull.Value);cmd.Parameters.AddWithValue("@b",(object?)batch??DBNull.Value);cmd.Parameters.AddWithValue("@e",(object?)expiry??DBNull.Value);cmd.Parameters.AddWithValue("@q",quantity);cmd.Parameters.AddWithValue("@m",minimum);cmd.Parameters.AddWithValue("@s",(object?)supplier??DBNull.Value);await cmd.ExecuteNonQueryAsync();}
+}
+public record InventoryRow(int Id,string Name,string? Category,string? Unit,string? Batch,DateTime? Expiry,decimal Quantity,decimal Minimum,string? Supplier,bool Active);
