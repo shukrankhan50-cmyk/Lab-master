@@ -9,4 +9,6 @@ public partial class TestMasterWindow : Window
  async void Search_TextChanged(object s,System.Windows.Controls.TextChangedEventArgs e){if(IsLoaded)await LoadAsync(SearchBox.Text);}
  async void Add_Click(object s,RoutedEventArgs e){var w=new AddTestWindow{Owner=this};if(w.ShowDialog()==true)await LoadAsync(SearchBox.Text);}
 
+ async void Edit_Click(object s,RoutedEventArgs e){if(TestsGrid.SelectedItem is not TestMasterItem t){MessageBox.Show("Select a test.");return;}var w=new EditTestWindow(t){Owner=this};if(w.ShowDialog()==true)await LoadAsync(SearchBox.Text);}
+ async void Toggle_Click(object s,RoutedEventArgs e){if(TestsGrid.SelectedItem is not TestMasterItem t){MessageBox.Show("Select a test.");return;}try{await service.SetActiveAsync(t.TestId,!t.IsActive);await LoadAsync(SearchBox.Text);}catch(Exception ex){MessageBox.Show(ex.Message,"Lab Master",MessageBoxButton.OK,MessageBoxImage.Error);}}
 }
