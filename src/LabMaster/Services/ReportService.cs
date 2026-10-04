@@ -6,7 +6,7 @@ public sealed class ReportService
  public async Task<List<ReportOrder>> GetEnteredOrdersAsync()
  {
   await using var c=Database.CreateConnection();await c.OpenAsync();
-  const string sql="SELECT DISTINCT o.OrderId,o.OrderNumber,o.ReportNumber,p.MRNumber,p.PatientName,p.Gender,o.OrderDate,o.Status FROM dbo.TestOrders o JOIN dbo.Patients p ON p.PatientId=o.PatientId JOIN dbo.TestOrderItems oi ON oi.OrderId=o.OrderId WHERE oi.Status='Entered' ORDER BY o.OrderId DESC";
+  const string sql="SELECT DISTINCT o.OrderId,o.OrderNumber,o.ReportNumber,p.MRNumber,p.PatientName,p.Gender,o.OrderDate,o.Status FROM dbo.TestOrders o JOIN dbo.Patients p ON p.PatientId=o.PatientId JOIN dbo.TestOrderItems oi ON oi.OrderId=o.OrderId WHERE oi.Status IN ('Entered','Verified') ORDER BY o.OrderId DESC";
   await using var cmd=new SqlCommand(sql,c);await using var r=await cmd.ExecuteReaderAsync();var list=new List<ReportOrder>();
   while(await r.ReadAsync())list.Add(new ReportOrder(r.GetInt32(0),r.GetString(1),r.IsDBNull(2)?null:r.GetString(2),r.GetString(3),r.GetString(4),r.GetString(5),r.GetDateTime(6),r.GetString(7)));
   return list;
