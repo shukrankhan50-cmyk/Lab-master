@@ -22,9 +22,9 @@ public sealed class TestMasterService
   cmd.Parameters.AddWithValue("@sample",(object?)sample??DBNull.Value);cmd.Parameters.AddWithValue("@unit",(object?)unit??DBNull.Value);cmd.Parameters.AddWithValue("@ref",(object?)reference??DBNull.Value);cmd.Parameters.AddWithValue("@price",price);
   await cmd.ExecuteNonQueryAsync();
  }
- public async Task<List<(int Id,string Name)>> GetDepartmentsAsync()
+ public async Task<List<DepartmentOption>> GetDepartmentsAsync()
  {
-  await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("SELECT DepartmentId,DepartmentName FROM dbo.Departments WHERE IsActive=1 ORDER BY DepartmentName",c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<(int,string)>();while(await r.ReadAsync())x.Add((r.GetInt32(0),r.GetString(1)));return x;
+  await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("SELECT DepartmentId,DepartmentName FROM dbo.Departments WHERE IsActive=1 ORDER BY DepartmentName",c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<DepartmentOption>();while(await r.ReadAsync())x.Add(new DepartmentOption(r.GetInt32(0),r.GetString(1)));return x;
  }
  public async Task UpdateAsync(int id,string code,string name,int departmentId,string? sample,string? unit,string? range,decimal price)
  {
@@ -34,3 +34,4 @@ public sealed class TestMasterService
  }
 
 }
+public record DepartmentOption(int Id,string Name);
