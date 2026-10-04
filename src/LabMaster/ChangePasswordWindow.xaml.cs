@@ -1,1 +1,53 @@
-using System.Windows;using LabMaster.Services;namespace LabMaster;public partial class ChangePasswordWindow:Window{readonly UserService service=new();readonly UserRow user;public ChangePasswordWindow(UserRow u){InitializeComponent();user=u;UserLabel.Text=$"User: {u.UserName}";}async void Save_Click(object s,RoutedEventArgs e){if(PasswordBox.Password.Length<6){StatusText.Text="Password must be at least 6 characters.";return;}if(PasswordBox.Password!=ConfirmBox.Password){StatusText.Text="Passwords do not match.";return;}try{await service.ChangePasswordAsync(user.UserId,PasswordBox.Password);DialogResult=true;}catch(Exception ex){StatusText.Text=ex.Message;}}}
+using System.Windows;
+using LabMaster.Services;
+
+namespace LabMaster;
+
+public partial class ChangePasswordWindow : Window
+{
+    readonly UserService service = new();
+    readonly int userId;
+    readonly string userName;
+
+    public ChangePasswordWindow(UserRow u)
+    {
+        InitializeComponent();
+        userId = u.UserId;
+        userName = u.UserName;
+        UserLabel.Text = $"User: {u.UserName}";
+    }
+
+    public ChangePasswordWindow(CurrentUser u)
+    {
+        InitializeComponent();
+        userId = u.UserId;
+        userName = u.UserName;
+        UserLabel.Text = $"First login — create a new password for {u.UserName}";
+    }
+
+    async void Save_Click(object s, RoutedEventArgs e)
+    {
+        if (PasswordBox.Password.Length < 8)
+        {
+            StatusText.Text = "Password must be at least 8 characters.";
+            return;
+        }
+
+        if (PasswordBox.Password != ConfirmBox.Password)
+        {
+            StatusText.Text = "Passwords do not match.";
+            return;
+        }
+
+        try
+        {
+            await service.ChangePasswordAsync(userId, PasswordBox.Password);
+            MessageBox.Show("Password changed successfully.", "Lab Master", MessageBoxButton.OK, MessageBoxImage.Information);
+            DialogResult = true;
+        }
+        catch (Exception ex)
+        {
+            StatusText.Text = ex.Message;
+        }
+    }
+}
