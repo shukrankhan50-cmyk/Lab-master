@@ -25,5 +25,20 @@ public sealed class ProfileService
   await using var cmd=new SqlCommand("UPDATE dbo.TestProfiles SET IsActive=@a WHERE ProfileId=@id",c);
   cmd.Parameters.AddWithValue("@a",active);cmd.Parameters.AddWithValue("@id",id);await cmd.ExecuteNonQueryAsync();
  }
+ public async Task<List<ProfileTestRow>> GetItemsAsync(int profileId)
+ {
+  await using var c=Database.CreateConnection();await c.OpenAsync();
+  const string sql="SELECT pi.ProfileItemId,t.TestId,t.TestCode,t.TestName,pi.DisplayOrder FROM dbo.TestProfileItems pi JOIN dbo.Tests t ON t.TestId=pi.TestId WHERE pi.ProfileId=@id ORDER BY pi.DisplayOrder,t.TestName";
+  await using var cmd=new SqlCommand(sql,c);cmd.Parameters.AddWithValue("@id",profileId);await using var r=await cmd.ExecuteReaderAsync();var list=new List<ProfileTestRow>();while(await r.ReadAsync())list.Add(new ProfileTestRow(r.GetInt32(0),r.GetInt32(1),r.GetString(2),r.GetString(3),r.GetInt32(4)));return list;
+ }
+ public async Task AddTestAsync(int profileId,int testId,int displayOrder)
+ {
+  await using var c=Database.CreateConnection();await c.OpenAsync();const string sql="IF NOT EXISTS(SELECT 1 FROM dbo.TestProfileItems WHERE ProfileId=@p AND TestId=@t) INSERT dbo.TestProfileItems(ProfileId,TestId,DisplayOrder) VALUES(@p,@t,@o)";
+  await using var cmd=new SqlCommand(sql,c);cmd.Parameters.AddWithValue("@p",profileId);cmd.Parameters.AddWithValue("@t",testId);cmd.Parameters.AddWithValue("@o",displayOrder);await cmd.ExecuteNonQueryAsync();
+ }
+ public async Task RemoveTestAsync(int profileItemId)
+ {
+  await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("DELETE FROM dbo.TestProfileItems WHERE ProfileItemId=@id",c);cmd.Parameters.AddWithValue("@id",profileItemId);await cmd.ExecuteNonQueryAsync();
+ }
 }
-public record ProfileRow(int ProfileId,string ProfileCode,string ProfileName,bool IsActive);
+public record ProfileRow(int ProfileId,string ProfileCode,string ProfileName,bool IsActive);\npublic record ProfileTestRow(int ProfileItemId,int TestId,string TestCode,string TestName,int DisplayOrder);
