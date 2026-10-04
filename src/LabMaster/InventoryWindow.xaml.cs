@@ -1,10 +1,1 @@
-using System.Windows;
-using LabMaster.Services;
-namespace LabMaster;
-public partial class InventoryWindow:Window
-{
- readonly InventoryService service=new();
- public InventoryWindow(){InitializeComponent();Loaded+=async(_,_)=>await LoadAsync();}
- async Task LoadAsync(){try{Grid.ItemsSource=await service.GetAsync();}catch(Exception ex){MessageBox.Show(ex.Message);}}
- async void Add_Click(object s,RoutedEventArgs e){var w=new AddInventoryWindow{Owner=this};if(w.ShowDialog()==true)await LoadAsync();}
-}
+using System.Windows;using LabMaster.Services;namespace LabMaster;public partial class InventoryWindow:Window{readonly InventoryService service=new();public InventoryWindow(){InitializeComponent();Loaded+=async(_,_)=>await LoadAsync();}async Task LoadAsync(){try{Grid.ItemsSource=await service.GetAsync();var alerts=await service.GetAlertsAsync();AlertText.Text=alerts.Count==0?"No low-stock or near-expiry alerts.":$"⚠ {alerts.Count} item(s) need attention: low stock or expiry within 30 days.";StatusText.Text="";}catch(Exception ex){MessageBox.Show(ex.Message,"Lab Master",MessageBoxButton.OK,MessageBoxImage.Error);}}async void Add_Click(object s,RoutedEventArgs e){var w=new AddInventoryWindow{Owner=this};if(w.ShowDialog()==true)await LoadAsync();}async void Stock_Click(object s,RoutedEventArgs e){if(Grid.SelectedItem is not InventoryRow item){MessageBox.Show("Select an inventory item.");return;}if(!decimal.TryParse(QtyBox.Text,out var qty)||qty<=0){MessageBox.Show("Enter a valid quantity.");return;}var type=((System.Windows.Controls.ComboBoxItem)TypeBox.SelectedItem).Content.ToString()!;try{await service.AdjustStockAsync(item.Id,qty,type,ReferenceBox.Text,NotesBox.Text);QtyBox.Clear();ReferenceBox.Clear();NotesBox.Clear();await LoadAsync();}catch(Exception ex){MessageBox.Show(ex.Message,"Lab Master",MessageBoxButton.OK,MessageBoxImage.Error);}}}
