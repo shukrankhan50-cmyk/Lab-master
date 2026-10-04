@@ -22,7 +22,9 @@ public sealed class BillingService
   var no="RCPT-"+DateTime.Now.ToString("yyyyMMddHHmmssfff");
   await using(var cmd=new SqlCommand("INSERT dbo.Payments(OrderId,ReceiptNumber,Amount,PaymentMethod,ReceivedBy) VALUES(@o,@n,@a,@m,@u); UPDATE dbo.TestOrders SET PaidAmount=PaidAmount+@a WHERE OrderId=@o;",c,(SqlTransaction)tx))
   {cmd.Parameters.AddWithValue("@o",orderId);cmd.Parameters.AddWithValue("@n",no);cmd.Parameters.AddWithValue("@a",amount);cmd.Parameters.AddWithValue("@m",method);cmd.Parameters.AddWithValue("@u",receiver);await cmd.ExecuteNonQueryAsync();}
-  await tx.CommitAsync();return no;
+  await tx.CommitAsync();
+  await new AuditService().WriteAsync(CurrentUserContext.UserName, "PAYMENT", "Payment", null, $"Receipt {no}, Order {orderId}, Amount {amount:0.00}");
+  return no;
  }
 }
 public record BillItem(int OrderId,string OrderNumber,string MRNumber,string PatientName,decimal Total,decimal Paid,decimal Balance);
