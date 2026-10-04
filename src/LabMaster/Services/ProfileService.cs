@@ -41,4 +41,5 @@ public sealed class ProfileService
   await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("DELETE FROM dbo.TestProfileItems WHERE ProfileItemId=@id",c);cmd.Parameters.AddWithValue("@id",profileItemId);await cmd.ExecuteNonQueryAsync();
  }
 }
-public record ProfileRow(int ProfileId,string ProfileCode,string ProfileName,bool IsActive);\npublic record ProfileTestRow(int ProfileItemId,int TestId,string TestCode,string TestName,int DisplayOrder);
+public record ProfileRow(int ProfileId,string ProfileCode,string ProfileName,bool IsActive);
+public record ProfileTestRow(int ProfileItemId,int TestId,string TestCode,string TestName,int DisplayOrder);
