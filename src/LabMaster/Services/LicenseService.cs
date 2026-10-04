@@ -86,7 +86,7 @@ qwIDAQAB
 
     public static string GetMachineId()
     {
-        using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWAREMicrosoftCryptography");
+        using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Cryptography");
         var machineGuid = key?.GetValue("MachineGuid")?.ToString();
 
         if (string.IsNullOrWhiteSpace(machineGuid))
