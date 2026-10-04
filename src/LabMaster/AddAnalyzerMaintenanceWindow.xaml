@@ -1,0 +1,14 @@
+<Window x:Class="LabMaster.AddAnalyzerMaintenanceWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Add Analyzer Maintenance" Height="690" Width="620" WindowStartupLocation="CenterOwner" Background="{StaticResource BackgroundBrush}">
+<ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="22">
+<TextBlock x:Name="TitleText" Text="Add Maintenance / Calibration" Foreground="White" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,18"/>
+<DatePicker x:Name="DateBox" Height="34" Margin="0,0,0,8"/>
+<ComboBox x:Name="TypeBox" Height="34" Margin="0,0,0,8"><ComboBoxItem Content="Calibration"/><ComboBoxItem Content="Calibration/Verification"/><ComboBoxItem Content="Preventive Maintenance"/><ComboBoxItem Content="Repair"/><ComboBoxItem Content="Other"/></ComboBox>
+<TextBox x:Name="DescriptionBox" Height="60" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,8" ToolTip="Description"/>
+<TextBox x:Name="PerformedByBox" Height="34" Margin="0,0,0,8" ToolTip="Performed by"/>
+<DatePicker x:Name="NextDueBox" Height="34" Margin="0,0,0,8"/>
+<TextBox x:Name="CostBox" Height="34" Margin="0,0,0,8" ToolTip="Cost"/>
+<TextBox x:Name="CertificateBox" Height="34" Margin="0,0,0,8" ToolTip="Certificate number"/>
+<TextBox x:Name="ResultBox" Height="34" Margin="0,0,0,8" ToolTip="Result e.g. PASS / FAIL"/>
+<TextBox x:Name="NotesBox" Height="70" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,8" ToolTip="Notes"/>
+<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0"><Button Content="Cancel" Width="100" Height="38" Margin="0,0,8,0" Click="Cancel_Click"/><Button Content="Save" Width="100" Height="38" Click="Save_Click"/></StackPanel>
+</StackPanel></ScrollViewer></Window>
