@@ -22,7 +22,9 @@ public sealed class TestOrderService
    foreach(var id in ids){await using var p=new SqlCommand("SELECT Price FROM dbo.Tests WHERE TestId=@id AND IsActive=1",c,(SqlTransaction)tx);p.Parameters.AddWithValue("@id",id);var v=await p.ExecuteScalarAsync();if(v==null)throw new InvalidOperationException("A selected test is unavailable.");total+=Convert.ToDecimal(v);}
    int orderId; await using(var cmd=new SqlCommand("INSERT dbo.TestOrders(OrderNumber,PatientId,TotalAmount) OUTPUT INSERTED.OrderId VALUES(@no,@patient,@total)",c,(SqlTransaction)tx)){cmd.Parameters.AddWithValue("@no",orderNo);cmd.Parameters.AddWithValue("@patient",patientId);cmd.Parameters.AddWithValue("@total",total);orderId=Convert.ToInt32(await cmd.ExecuteScalarAsync());}
    foreach(var id in ids){await using var cmd=new SqlCommand("INSERT dbo.TestOrderItems(OrderId,TestId) VALUES(@o,@t)",c,(SqlTransaction)tx);cmd.Parameters.AddWithValue("@o",orderId);cmd.Parameters.AddWithValue("@t",id);await cmd.ExecuteNonQueryAsync();}
-   await tx.CommitAsync(); return orderNo;
+   await tx.CommitAsync();
+   await new AuditService().WriteAsync(CurrentUserContext.UserName, "CREATE", "TestOrder", orderId, $"Created {orderNo} with {ids.Count} test(s)");
+   return orderNo;
   } catch { await tx.RollbackAsync(); throw; }
  }
 }
