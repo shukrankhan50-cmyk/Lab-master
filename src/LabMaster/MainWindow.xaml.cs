@@ -41,4 +41,6 @@ public partial class MainWindow : Window
     private void Financial_Click(object sender, RoutedEventArgs e) => new FinancialReportWindow { Owner = this }.ShowDialog();
     private void Settings_Click(object sender, RoutedEventArgs e) => new SettingsWindow { Owner = this }.ShowDialog();
     private void Audit_Click(object sender, RoutedEventArgs e) => new AuditWindow { Owner = this }.ShowDialog();
+ private void QC_Click(object sender,RoutedEventArgs e)=>new QCWindow{Owner=this}.ShowDialog();
+ private void Inventory_Click(object sender,RoutedEventArgs e)=>new InventoryWindow{Owner=this}.ShowDialog();
 }
