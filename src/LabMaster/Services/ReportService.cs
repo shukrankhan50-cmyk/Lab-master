@@ -133,6 +133,9 @@ public sealed class ReportService
                     SELECT @existing;
                 ELSE
                 BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM dbo.TestOrders WHERE OrderId=@id)
+                        THROW 50001, 'Test order was not found.', 1;
+
                     DECLARE @d DATE=CAST(SYSDATETIME() AS DATE);
 
                     IF NOT EXISTS
