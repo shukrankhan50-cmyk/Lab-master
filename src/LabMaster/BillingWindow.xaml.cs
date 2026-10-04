@@ -18,7 +18,8 @@ public partial class BillingWindow : Window
     {
         try
         {
-            BillsGrid.ItemsSource = await service.GetPendingBillsAsync();\n            ReceiptsGrid.ItemsSource = await service.GetReceiptsAsync();
+            BillsGrid.ItemsSource = await service.GetPendingBillsAsync();
+            ReceiptsGrid.ItemsSource = await service.GetReceiptsAsync();
             BalanceLabel.Text = "";
             selected = null;
         }
@@ -76,7 +77,8 @@ public partial class BillingWindow : Window
                 CurrentUserContext.UserName);
 
             MessageBox.Show(
-                $"Payment received successfully.\nReceipt: {no}",
+                $"Payment received successfully.
+Receipt: {no}",
                 "Lab Master",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -110,7 +112,14 @@ public partial class BillingWindow : Window
         };
         panel.Children.Add(new System.Windows.Controls.TextBlock { Text = "LAB MASTER", FontSize = 24, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center });
         panel.Children.Add(new System.Windows.Controls.TextBlock { Text = "Payment Receipt", FontSize = 18, Margin = new Thickness(0, 8, 0, 20), HorizontalAlignment = HorizontalAlignment.Center });
-        panel.Children.Add(new System.Windows.Controls.TextBlock { Text = $"Receipt: {receipt.ReceiptNumber}\nOrder: {receipt.OrderNumber}\nMR: {receipt.MRNumber}\nPatient: {receipt.PatientName}\nAmount: Rs. {receipt.Amount:N2}\nMethod: {receipt.PaymentMethod}\nDate: {receipt.PaidAt:dd-MMM-yyyy HH:mm}\nReceived By: {receipt.ReceivedBy ?? "-"}", FontSize = 15, Margin = new Thickness(0, 0, 0, 20) });
+        panel.Children.Add(new System.Windows.Controls.TextBlock { Text = $"Receipt: {receipt.ReceiptNumber}
+Order: {receipt.OrderNumber}
+MR: {receipt.MRNumber}
+Patient: {receipt.PatientName}
+Amount: Rs. {receipt.Amount:N2}
+Method: {receipt.PaymentMethod}
+Date: {receipt.PaidAt:dd-MMM-yyyy HH:mm}
+Received By: {receipt.ReceivedBy ?? "-"}", FontSize = 15, Margin = new Thickness(0, 0, 0, 20) });
         panel.Children.Add(new System.Windows.Controls.TextBlock { Text = "Thank you.", FontSize = 13, HorizontalAlignment = HorizontalAlignment.Center });
 
         var dlg = new PrintDialog();
