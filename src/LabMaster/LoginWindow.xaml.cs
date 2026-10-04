@@ -1,5 +1,4 @@
 using System.Windows;
-using LabMaster.Models;
 using LabMaster.Services;
 
 namespace LabMaster;
