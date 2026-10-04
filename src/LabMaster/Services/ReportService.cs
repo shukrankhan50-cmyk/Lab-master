@@ -124,7 +124,42 @@ public sealed class ReportService
         await c.OpenAsync();
         await using var tx = await c.BeginTransactionAsync();
 
-        const string sql = "DECLARE @existing NVARCHAR(40); SELECT @existing=ReportNumber FROM dbo.TestOrders WHERE OrderId=@id; IF @existing IS NOT NULL SELECT @existing; ELSE BEGIN DECLARE @d DATE=CAST(SYSDATETIME() AS DATE); IF NOT EXISTS(SELECT 1 FROM dbo.ReportNumberSequence WHERE SequenceDate=@d) INSERT dbo.ReportNumberSequence(SequenceDate,LastNumber) VALUES(@d,0); UPDATE dbo.ReportNumberSequence WITH (UPDLOCK,HOLDLOCK) SET LastNumber=LastNumber+1 WHERE SequenceDate=@d; DECLARE @n INT=(SELECT LastNumber FROM dbo.ReportNumberSequence WHERE SequenceDate=@d); DECLARE @rn NVARCHAR(40)=CONCAT('RPT-',CONVERT(char(8),@d,112),'-',FORMAT(@n,'0000')); UPDATE dbo.TestOrders SET ReportNumber=@rn WHERE OrderId=@id; SELECT @rn; END";
+        const string sql = """
+                SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+                DECLARE @existing NVARCHAR(40);
+                SELECT @existing=ReportNumber FROM dbo.TestOrders WHERE OrderId=@id;
+
+                IF @existing IS NOT NULL
+                    SELECT @existing;
+                ELSE
+                BEGIN
+                    DECLARE @d DATE=CAST(SYSDATETIME() AS DATE);
+
+                    IF NOT EXISTS
+                    (
+                        SELECT 1
+                        FROM dbo.ReportNumberSequence WITH (UPDLOCK,HOLDLOCK)
+                        WHERE SequenceDate=@d
+                    )
+                    BEGIN
+                        INSERT dbo.ReportNumberSequence(SequenceDate,LastNumber)
+                        VALUES(@d,0);
+                    END
+
+                    UPDATE dbo.ReportNumberSequence
+                    SET LastNumber=LastNumber+1
+                    WHERE SequenceDate=@d;
+
+                    DECLARE @n INT=(SELECT LastNumber FROM dbo.ReportNumberSequence WHERE SequenceDate=@d);
+                    DECLARE @rn NVARCHAR(40)=CONCAT('RPT-',CONVERT(char(8),@d,112),'-',FORMAT(@n,'0000'));
+
+                    UPDATE dbo.TestOrders
+                    SET ReportNumber=@rn
+                    WHERE OrderId=@id;
+
+                    SELECT @rn;
+                END
+                """;
         await using var cmd = new SqlCommand(sql, c, (SqlTransaction)tx);
         cmd.Parameters.AddWithValue("@id", orderId);
         var result = await cmd.ExecuteScalarAsync();
