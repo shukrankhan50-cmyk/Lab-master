@@ -34,6 +34,7 @@ public partial class MainWindow : Window
     private void ResultEntry_Click(object sender, RoutedEventArgs e) { new ResultEntryWindow { Owner = this }.ShowDialog(); _ = RefreshDashboardAsync(); }
     private void Reports_Click(object sender, RoutedEventArgs e) { new ReportWindow { Owner = this }.ShowDialog(); _ = RefreshDashboardAsync(); }
     private void Departments_Click(object sender, RoutedEventArgs e) => new DepartmentWindow { Owner = this }.ShowDialog();
+    private void Profile_Click(object sender, RoutedEventArgs e) => new ProfileWindow { Owner = this }.ShowDialog();
     private void TestMaster_Click(object sender, RoutedEventArgs e) => new TestMasterWindow { Owner = this }.ShowDialog();
     private void User_Click(object sender, RoutedEventArgs e) => new UserWindow { Owner = this }.ShowDialog();
     private void Backup_Click(object sender, RoutedEventArgs e) => new BackupWindow { Owner = this }.ShowDialog();
