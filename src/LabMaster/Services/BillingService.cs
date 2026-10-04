@@ -26,5 +26,14 @@ public sealed class BillingService
   await new AuditService().WriteAsync(CurrentUserContext.UserName, "PAYMENT", "Payment", null, $"Receipt {no}, Order {orderId}, Amount {amount:0.00}");
   return no;
  }
+ public async Task<List<ReceiptRow>> GetReceiptsAsync()
+ {
+  await using var c=Database.CreateConnection();await c.OpenAsync();
+  const string sql="SELECT TOP 200 p.PaymentId,p.ReceiptNumber,p.OrderId,o.OrderNumber,pt.MRNumber,pt.PatientName,p.Amount,p.PaymentMethod,p.PaidAt,p.ReceivedBy FROM dbo.Payments p JOIN dbo.TestOrders o ON o.OrderId=p.OrderId JOIN dbo.Patients pt ON pt.PatientId=o.PatientId ORDER BY p.PaymentId DESC";
+  await using var cmd=new SqlCommand(sql,c);await using var r=await cmd.ExecuteReaderAsync();var x=new List<ReceiptRow>();
+  while(await r.ReadAsync())x.Add(new ReceiptRow(r.GetInt32(0),r.GetString(1),r.GetInt32(2),r.GetString(3),r.GetString(4),r.GetString(5),r.GetDecimal(6),r.GetString(7),r.GetDateTime(8),r.IsDBNull(9)?null:r.GetString(9)));
+  return x;
+ }
 }
+public record ReceiptRow(int PaymentId,string ReceiptNumber,int OrderId,string OrderNumber,string MRNumber,string PatientName,decimal Amount,string PaymentMethod,DateTime PaidAt,string? ReceivedBy);
 public record BillItem(int OrderId,string OrderNumber,string MRNumber,string PatientName,decimal Total,decimal Paid,decimal Balance);
