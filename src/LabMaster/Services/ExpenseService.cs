@@ -1,0 +1,9 @@
+using LabMaster.Data;
+using Microsoft.Data.SqlClient;
+namespace LabMaster.Services;
+public sealed class ExpenseService
+{
+ public async Task<List<ExpenseRow>> GetAsync(DateTime from,DateTime to){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="SELECT ExpenseId,ExpenseDate,Category,Description,Amount,PaidTo,PaymentMethod FROM dbo.Expenses WHERE ExpenseDate>=@f AND ExpenseDate<@t ORDER BY ExpenseDate DESC";await using var cmd=new SqlCommand(s,c);cmd.Parameters.AddWithValue("@f",from.Date);cmd.Parameters.AddWithValue("@t",to.Date.AddDays(1));await using var r=await cmd.ExecuteReaderAsync();var x=new List<ExpenseRow>();while(await r.ReadAsync())x.Add(new ExpenseRow(r.GetInt32(0),r.GetDateTime(1),r.GetString(2),r.IsDBNull(3)?null:r.GetString(3),r.GetDecimal(4),r.IsDBNull(5)?null:r.GetString(5),r.GetString(6)));return x;}
+ public async Task AddAsync(string category,string? description,decimal amount,string? paidTo,string method,string? by){await using var c=Database.CreateConnection();await c.OpenAsync();const string s="INSERT dbo.Expenses(Category,Description,Amount,PaidTo,PaymentMethod,CreatedBy) VALUES(@c,@d,@a,@p,@m,@b)";await using var cmd=new SqlCommand(s,c);cmd.Parameters.AddWithValue("@c",category.Trim());cmd.Parameters.AddWithValue("@d",(object?)description??DBNull.Value);cmd.Parameters.AddWithValue("@a",amount);cmd.Parameters.AddWithValue("@p",(object?)paidTo??DBNull.Value);cmd.Parameters.AddWithValue("@m",method);cmd.Parameters.AddWithValue("@b",(object?)by??DBNull.Value);await cmd.ExecuteNonQueryAsync();}
+}
+public record ExpenseRow(int Id,DateTime Date,string Category,string? Description,decimal Amount,string? PaidTo,string Method);
