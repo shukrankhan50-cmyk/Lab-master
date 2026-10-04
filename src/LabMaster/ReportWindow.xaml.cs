@@ -207,8 +207,7 @@ public partial class ReportWindow : Window
         {
             CellSpacing = 0,
             BorderBrush = System.Windows.Media.Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            RepeatHeader = true
+            BorderThickness = new Thickness(1)
         };
         results.Columns.Add(new TableColumn { Width = new GridLength(2.2, GridUnitType.Star) });
         results.Columns.Add(new TableColumn { Width = new GridLength(1.1, GridUnitType.Star) });
