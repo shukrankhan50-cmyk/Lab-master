@@ -18,10 +18,8 @@ public partial class ChangePasswordWindow : Window
     }
 
     public ChangePasswordWindow(CurrentUser u)
+        : this(new UserRow(u.UserId, u.UserName, u.DisplayName, u.RoleName, true))
     {
-        InitializeComponent();
-        userId = u.UserId;
-        userName = u.UserName;
         UserLabel.Text = $"First login — create a new password for {u.UserName}";
     }
 
