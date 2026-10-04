@@ -41,6 +41,8 @@ public sealed class PatientService
         command.Parameters.AddWithValue("@Address", (object?)patient.Address ?? DBNull.Value);
         command.Parameters.AddWithValue("@ReferringDoctor", (object?)patient.ReferringDoctor ?? DBNull.Value);
 
-        return Convert.ToInt32(await command.ExecuteScalarAsync());
+        var id = Convert.ToInt32(await command.ExecuteScalarAsync());
+        await new AuditService().WriteAsync(CurrentUserContext.UserName, "CREATE", "Patient", id, $"Registered {patient.MRNumber}");
+        return id;
     }
 }
