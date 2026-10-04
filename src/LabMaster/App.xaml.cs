@@ -27,6 +27,9 @@ public partial class App : Application
    return;
   }
 
+  if (login.LoggedInUser is null) { Shutdown(); return; }
+  CurrentUserContext.Set(login.LoggedInUser);
+
   var main = new MainWindow();
   MainWindow = main;
   main.Show();
