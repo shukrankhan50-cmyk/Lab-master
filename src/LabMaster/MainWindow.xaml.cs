@@ -50,5 +50,6 @@ public partial class MainWindow : Window
     private void Settings_Click(object sender, RoutedEventArgs e) { if (Allowed("Administration")) new SettingsWindow { Owner = this }.ShowDialog(); }
     private void Audit_Click(object sender, RoutedEventArgs e) { if (Allowed("Administration")) new AuditWindow { Owner = this }.ShowDialog(); }
  private void QC_Click(object sender,RoutedEventArgs e){if(Allowed("QC"))new QCWindow{Owner=this}.ShowDialog();}
- private void Inventory_Click(object sender,RoutedEventArgs e){if(Allowed("Inventory"))new InventoryWindow{Owner=this}.ShowDialog();}
+ private void Analyzer_Click(object sender,RoutedEventArgs e){if(Allowed("MasterData"))new AnalyzerWindow{Owner=this}.ShowDialog();}
+    private void Inventory_Click(object sender,RoutedEventArgs e){if(Allowed("Inventory"))new InventoryWindow{Owner=this}.ShowDialog();}
 }
