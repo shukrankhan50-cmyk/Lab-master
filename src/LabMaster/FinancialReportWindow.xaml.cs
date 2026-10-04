@@ -34,7 +34,9 @@ public partial class FinancialReportWindow : Window
             var x = await service.GetAsync(from, to);
             CollectionText.Text = $"Collection: PKR {x.Collection:N2}";
             ExpenseText.Text = $"Expenses: PKR {x.Expenses:N2}";
-            BilledText.Text = $"Billed: PKR {x.Billed:N2}";\n            OrdersText.Text = $"Orders: {x.Orders:N0}";\n            NetText.Text = $"Net: PKR {x.Net:N2}";
+            BilledText.Text = $"Billed: PKR {x.Billed:N2}";
+            OrdersText.Text = $"Orders: {x.Orders:N0}";
+            NetText.Text = $"Net: PKR {x.Net:N2}";
         }
         catch (Exception ex)
         {
