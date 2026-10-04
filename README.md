@@ -32,3 +32,17 @@ The default application connection is `.SQLEXPRESS`. Change `src/LabMaster/Data/
 - Billing foundation
 - Database backup foundation
 - Test/profile/department master foundation
+
+
+## Licensing & Activation
+Lab Master is designed as an installed Windows application with a per-PC activation system.
+
+- Every installation displays a unique PC Activation ID.
+- Activation keys are digitally signed and bound to that PC.
+- Each production activation is intended to remain valid for 90 days.
+- When a key expires, Lab Master blocks normal startup until a new valid key is entered.
+- The application contains only the public signing key; the private signing key must remain securely with the software owner/licensing administrator.
+- Activation data is stored locally under the Windows common application-data area.
+- The licensing system is designed for future centralized/server licensing as well, while supporting offline activation.
+
+The production public signing key still needs to be generated and embedded before the first production activation keys are issued.
