@@ -33,5 +33,6 @@ public sealed class TestMasterService
   await using var cmd=new SqlCommand(sql,c);cmd.Parameters.AddWithValue("@id",id);cmd.Parameters.AddWithValue("@code",code.Trim());cmd.Parameters.AddWithValue("@name",name.Trim());cmd.Parameters.AddWithValue("@dep",departmentId);cmd.Parameters.AddWithValue("@sample",(object?)sample??DBNull.Value);cmd.Parameters.AddWithValue("@unit",(object?)unit??DBNull.Value);cmd.Parameters.AddWithValue("@range",(object?)range??DBNull.Value);cmd.Parameters.AddWithValue("@price",price);await cmd.ExecuteNonQueryAsync();
  }
 
+ public async Task SetActiveAsync(int id,bool active){await using var c=Database.CreateConnection();await c.OpenAsync();await using var cmd=new SqlCommand("UPDATE dbo.Tests SET IsActive=@a WHERE TestId=@id",c);cmd.Parameters.AddWithValue("@a",active);cmd.Parameters.AddWithValue("@id",id);await cmd.ExecuteNonQueryAsync();}
 }
 public record DepartmentOption(int Id,string Name);
