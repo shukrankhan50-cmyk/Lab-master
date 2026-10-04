@@ -10,4 +10,4 @@ public static class CurrentUserContext
     public static void Set(CurrentUser user) => User = user;
 }
 
-public record CurrentUser(int UserId, string UserName, string DisplayName, string RoleName);
+public record CurrentUser(int UserId, string UserName, string DisplayName, string RoleName, bool RequiresPasswordChange = false);
