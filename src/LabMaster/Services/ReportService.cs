@@ -71,13 +71,38 @@ public sealed class ReportService
 
         try
         {
-            const string countSql = "SELECT COUNT(1) FROM dbo.TestOrderItems WHERE OrderId=@id AND Status='Entered'";
+            const string countSql = """
+                SELECT
+                    COUNT(1),
+                    SUM(CASE WHEN Status='Entered' THEN 1 ELSE 0 END),
+                    SUM(CASE WHEN Status='Pending' THEN 1 ELSE 0 END),
+                    SUM(CASE WHEN Status='Rejected' THEN 1 ELSE 0 END)
+                FROM dbo.TestOrderItems
+                WHERE OrderId=@id;
+                """;
+
             await using var count = new SqlCommand(countSql, c, (SqlTransaction)tx);
             count.Parameters.AddWithValue("@id", orderId);
-            var enteredCount = Convert.ToInt32(await count.ExecuteScalarAsync());
+            await using var reader = await count.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+                throw new InvalidOperationException("The test order could not be found.");
+
+            var totalCount = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+            var enteredCount = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
+            var pendingCount = reader.IsDBNull(2) ? 0 : reader.GetInt32(2);
+            var rejectedCount = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+            await reader.CloseAsync();
+
+            if (totalCount == 0)
+                throw new InvalidOperationException("The test order could not be found.");
 
             if (enteredCount == 0)
                 throw new InvalidOperationException("No entered results are waiting for verification.");
+
+            if (pendingCount > 0 || rejectedCount > 0 || enteredCount != totalCount)
+                throw new InvalidOperationException(
+                    $"All ordered tests must have valid entered results before verification. Pending: {pendingCount}; Rejected: {rejectedCount}; Entered: {enteredCount}/{totalCount}.");
 
             const string sql = """
                 UPDATE dbo.TestOrderItems
