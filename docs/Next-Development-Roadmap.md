@@ -1,31 +1,44 @@
-# Lab Master — Next Development Roadmap
+# Lab Master — Development Status
 
 ## Completed foundation
 - Patient registration and search
-- Test ordering
-- Result entry
-- Reports and verification flow
-- Billing and receipts
+- Test ordering and duplicate-test protection
+- Result entry and previous-result support
+- Report verification, numbering and printer/PDF workflow
+- Billing and receipt workflow
 - Inventory and inventory history
 - QC and QC history
 - Profiles and profile tests
-- Analyzer master
+- Analyzer master and maintenance/calibration history
 - Department slips
-- Users, permissions, audit log
+- Users, role-based permissions and audit log
 - Backup and restore
-- Licensing / activation
+- Financial/management summary reporting
+- Offline licensing / activation and publishing documentation
 
-## Next safe development order
-1. Improve report printing and report settings integration.
-2. Add stronger numbering and duplicate protection.
-3. Improve login/admin security and first-password setup.
-4. Add analyzer maintenance/calibration history.
-5. Improve financial and management reporting.
-6. Add installer/publishing documentation.
-7. Perform a final source review for compile-risk issues.
+## Integrity and security hardening
+- First-login password setup with minimum password length
+- PBKDF2-SHA256 password hashing
+- Transactional order creation, billing and report verification
+- Database-level uniqueness for test-order items and report numbers
+- Protected report-number sequence generation
+- Permission checks around administrative/financial/report actions
+- Audit logging for important workflow changes
 
-## Deferred because of database-safety restrictions
+## Final review checklist
+1. Run all database migrations in numeric order on a clean SQL Server database.
+2. Build the solution in GitHub Actions on Windows.
+3. Confirm the application database connection points to the intended SQL Server instance.
+4. Configure the production report header/footer in Report Settings.
+5. Set real test prices and local reference ranges before production use.
+6. Create named user accounts and verify role permissions.
+7. Create and test a backup/restore cycle before storing live patient data.
+8. Generate and securely store the production RSA licensing key pair; never commit the private key.
+9. Publish the Windows x64 application using the supplied PowerShell script.
+10. Perform a controlled end-to-end test: registration → order → billing → result → verification → report print.
+
+## Deferred / deliberately not enabled
 - True sample collection/received workflow requiring new sample-status database fields.
-- Department-filtered sample workflow requiring changes to the existing department-slip service.
+- Department-filtered sample workflow that previously required a blocked database/service change.
 
-These deferred items should be implemented only after the repository accepts the required database changes safely.
+These should be implemented only as a separately reviewed schema change; they are not required for the core LIS workflow.
