@@ -2,8 +2,8 @@ USE LabMasterDb;
 GO
 
 /*
-    Patient registration table.
-    Safe to run more than once: existing tables and indexes are preserved.
+  Patient registration migration.
+  Safe to rerun: preserves existing tables and avoids duplicate name indexes.
 */
 
 IF OBJECT_ID(N'dbo.Patients', N'U') IS NULL
@@ -30,9 +30,8 @@ END
 GO
 
 /*
-    Older copies used IX_Patient_Name (singular); newer copies use
-    IX_Patients_Name (plural). If either already exists, do not try
-    to create a duplicate index.
+  Do not recreate the index if either legacy name exists, or if any
+  non-hypothetical index already starts with PatientName.
 */
 IF OBJECT_ID(N'dbo.Patients', N'U') IS NOT NULL
    AND COL_LENGTH(N'dbo.Patients', N'PatientName') IS NOT NULL
@@ -42,17 +41,16 @@ IF OBJECT_ID(N'dbo.Patients', N'U') IS NOT NULL
        FROM sys.indexes
        WHERE object_id = OBJECT_ID(N'dbo.Patients')
          AND name IN (N'IX_Patient_Name', N'IX_Patients_Name')
+         AND index_id > 0
    )
    AND NOT EXISTS
    (
        SELECT 1
-       FROM sys.indexes i
-       INNER JOIN sys.index_columns ic
-           ON ic.object_id = i.object_id
-          AND ic.index_id = i.index_id
-       INNER JOIN sys.columns c
-           ON c.object_id = ic.object_id
-          AND c.column_id = ic.column_id
+       FROM sys.indexes AS i
+       INNER JOIN sys.index_columns AS ic
+         ON ic.object_id = i.object_id AND ic.index_id = i.index_id
+       INNER JOIN sys.columns AS c
+         ON c.object_id = ic.object_id AND c.column_id = ic.column_id
        WHERE i.object_id = OBJECT_ID(N'dbo.Patients')
          AND i.is_hypothetical = 0
          AND ic.key_ordinal = 1
