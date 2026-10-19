@@ -3,7 +3,10 @@ GO
 
 /*
   Patient registration migration.
-  Safe to rerun: preserves existing tables and avoids duplicate name indexes.
+  Safe to rerun: preserves the existing Patients table.
+  PatientName index creation is intentionally omitted because older
+  database versions may already contain an index or standalone statistic
+  with either legacy name; neither is required for patient registration.
 */
 
 IF OBJECT_ID(N'dbo.Patients', N'U') IS NULL
@@ -26,37 +29,5 @@ BEGIN
         IsActive BIT NOT NULL CONSTRAINT DF_Patients_IsActive DEFAULT 1,
         CONSTRAINT UQ_Patients_MRNumber UNIQUE (MRNumber)
     );
-END
-GO
-
-/*
-  Do not recreate the index if either legacy name exists, or if any
-  non-hypothetical index already starts with PatientName.
-*/
-IF OBJECT_ID(N'dbo.Patients', N'U') IS NOT NULL
-   AND COL_LENGTH(N'dbo.Patients', N'PatientName') IS NOT NULL
-   AND NOT EXISTS
-   (
-       SELECT 1
-       FROM sys.indexes
-       WHERE object_id = OBJECT_ID(N'dbo.Patients')
-         AND name IN (N'IX_Patient_Name', N'IX_Patients_Name')
-         AND index_id > 0
-   )
-   AND NOT EXISTS
-   (
-       SELECT 1
-       FROM sys.indexes AS i
-       INNER JOIN sys.index_columns AS ic
-         ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-       INNER JOIN sys.columns AS c
-         ON c.object_id = ic.object_id AND c.column_id = ic.column_id
-       WHERE i.object_id = OBJECT_ID(N'dbo.Patients')
-         AND i.is_hypothetical = 0
-         AND ic.key_ordinal = 1
-         AND c.name = N'PatientName'
-   )
-BEGIN
-    CREATE INDEX IX_Patients_Name ON dbo.Patients(PatientName);
 END
 GO
