@@ -101,7 +101,8 @@ public partial class AcceptTestWindow : Window
             }
 
             patientId = match.PatientId;
-            PatientLabel.Text = $"{match.PatientName}  •  {match.Gender}  •  {match.Phone ?? "No phone on file"}";
+            var phone = string.IsNullOrWhiteSpace(match.Phone) ? "No phone on file" : match.Phone;
+            PatientLabel.Text = $"{match.PatientName}  •  {match.Gender}  •  {phone}";
             StatusLabel.Text = "Patient selected. Choose the tests for this order.";
         }
         catch
