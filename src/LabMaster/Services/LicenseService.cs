@@ -9,13 +9,15 @@ namespace LabMaster.Services;
 public sealed class LicenseService
 {
     const string PublicKeyPem = @"-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjd6ppbh5YAbQHHBiTe1q
-JzJDXy7UhYypJ0h1WS+6vQQ6HtF0twZWg8X+4h4cGsZyRV3FRNgRB/TCT4RMs7uJ
-lDcIEVhGAaLMd0hTpa730cbyIjXf/KJTxnweXcq/M/Q9kQFoDjw+8Ixrr6eNz1bz
-bSmkHgXnfEVPJTbnvnFgG7hTTOEvF29HvEaZFHqF3dc8KSBj85nq9uu0BFP1SGqO
-8n/cGeCau9PR/8fMepjxHp8CC3g6C65Vke3orsC6ydzVrKTz99Ygo83YW0Be1Oyw
-pGYblD0EX6Z3aDTnsXdaJSHp38cQH94UBovTbGTgnsfUwUKGmMlw7f1k9iIM/VEe
-qwIDAQAB
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA34oZ87yMRfu4harzhWvj
+4Fr5aN1Xt+quabY0diYJxPY8u8PJZg9fF/W8TQ5OXadF+IzkQki7fhdo5PZujUA7
+C0PAJs1Ne4O1/r7j+sDhLJOTZZ9uz1IcVgsbx7LvBWdyp1tdI7IUbuDbuM4qBGht
+Xw0Q7r+klrKqaVfi6ekh0e87J8geI2Aj9qXxLPtygjpkKtN9ukxOaERdnKHwuuJw
+uN/722p1dEV/rpoXbs4nE9k3bEfsQqUqN+JffUUmlHLo0jumsLaoYDG9jrM65SOG
+zfrAyIa7nSel1csURAc57zh/o5TNqI1YNIjugym6oxLzoebkM80pUXW++MfnSKXv
+ovLLTOfBpxuKUng3wHsCA9RMKNfiwHrjwa3eDRm2/j90DZZEE0XIrf+5nuLQ7SHH
++qspDbuVvboOTatyWNJt0+k3Fen0ym37hxNvFknZ7vfLgX8u8g3ewouDXNf73hEI
+mVD+JRe2JVJ8tyaA2H3OW+1njNylLz5BDqrCWWLrtDgFAgMBAAE=
 -----END PUBLIC KEY-----";
 
     static readonly string LicenseDirectory =
