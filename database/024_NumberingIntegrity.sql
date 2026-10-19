@@ -12,8 +12,9 @@ IF NOT EXISTS
       AND object_id = OBJECT_ID(N'dbo.TestOrderItems')
 )
 BEGIN
-    CREATE UNIQUE INDEX UX_TestOrderItems_Order_Test
-        ON dbo.TestOrderItems(OrderId, TestId);
+    EXEC sys.sp_executesql
+        N'CREATE UNIQUE INDEX UX_TestOrderItems_Order_Test
+          ON dbo.TestOrderItems(OrderId, TestId);';
 END
 GO
 
@@ -25,8 +26,9 @@ IF NOT EXISTS
       AND object_id = OBJECT_ID(N'dbo.TestOrders')
 )
 BEGIN
-    CREATE UNIQUE INDEX UX_TestOrders_ReportNumber
-        ON dbo.TestOrders(ReportNumber)
-        WHERE ReportNumber IS NOT NULL;
+    EXEC sys.sp_executesql
+        N'CREATE UNIQUE INDEX UX_TestOrders_ReportNumber
+          ON dbo.TestOrders(ReportNumber)
+          WHERE ReportNumber IS NOT NULL;';
 END
 GO
