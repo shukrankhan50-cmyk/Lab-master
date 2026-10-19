@@ -1,8 +1,100 @@
-<Window x:Class="LabMaster.AcceptTestWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Accept Test" Height="720" Width="1150" WindowStartupLocation="CenterOwner" Background="{StaticResource BackgroundBrush}">
-<Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-<StackPanel><TextBlock Text="Accept Test / Create Order" Foreground="White" FontSize="28" FontWeight="SemiBold"/><TextBlock Text="Select a patient, choose one or more laboratory tests, then create the order." Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,15"/></StackPanel>
-<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15"><TextBox x:Name="MrBox" Width="180" Height="36" Padding="8"/><Button Content="Find Patient" Width="110" Height="36" Margin="8,0,12,0" Click="FindPatient_Click"/><TextBlock x:Name="PatientLabel" Foreground="White" VerticalAlignment="Center"/></StackPanel>
-<Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="330"/></Grid.ColumnDefinitions>
-<StackPanel><TextBox x:Name="TestSearchBox" Height="36" Padding="8" Margin="0,0,0,8" TextChanged="Search_TextChanged"/><DataGrid x:Name="TestsGrid" AutoGenerateColumns="False" SelectionMode="Extended" SelectionUnit="FullRow" IsReadOnly="True" Background="{StaticResource CardBrush}" Foreground="White"><DataGrid.Columns><DataGridTextColumn Header="Code" Binding="{Binding TestCode}" Width="100"/><DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="*"/><DataGridTextColumn Header="Department" Binding="{Binding DepartmentName}" Width="170"/><DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="90"/></DataGrid.Columns></DataGrid></StackPanel>
-<Border Grid.Column="1" Background="{StaticResource CardBrush}" Margin="14,0,0,0" Padding="18"><StackPanel><TextBlock Text="Selected Tests" Foreground="White" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="Use Ctrl/Shift to select multiple rows." Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,12"/><TextBlock x:Name="SelectedLabel" Foreground="White" TextWrapping="Wrap"/><TextBlock x:Name="TotalLabel" Foreground="{StaticResource AccentBrush}" FontSize="20" FontWeight="Bold" Margin="0,15,0,0"/></StackPanel></Border></Grid>
-<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0"><Button Content="Create Order" Width="150" Height="40" Click="CreateOrder_Click"/></StackPanel></Grid></Window>
+<Window x:Class="LabMaster.AcceptTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Accept Test" Height="740" Width="1180" MinHeight="620" MinWidth="960"
+        WindowStartupLocation="CenterOwner" Background="{StaticResource BackgroundBrush}">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,0,16">
+            <TextBlock Text="Accept Test / Create Order" Foreground="{StaticResource TextBrush}" FontSize="28" FontWeight="SemiBold"/>
+            <TextBlock Text="Find a patient, select the requested tests, review the total, then create the order."
+                       Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="{StaticResource CardBrush}" CornerRadius="10" Padding="16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="230"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Patient MR number" Foreground="{StaticResource MutedTextBrush}" FontSize="11" FontWeight="SemiBold"/>
+                    <TextBox x:Name="MrBox" Height="38" Padding="10,0" Margin="0,5,0,0"
+                             VerticalContentAlignment="Center" ToolTip="Enter the patient's MR number"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Find patient" Width="120" Height="38" Margin="10,20,18,0"
+                        Click="FindPatient_Click"/>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock Text="PATIENT" Foreground="{StaticResource MutedTextBrush}" FontSize="9" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="PatientLabel" Text="No patient selected" Foreground="{StaticResource TextBrush}"
+                               FontSize="13" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="330"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="0,0,0,9">
+                    <TextBlock Text="Available tests" Foreground="{StaticResource TextBrush}" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBox x:Name="TestSearchBox" Height="38" Padding="10,0" Margin="0,6,0,0"
+                             VerticalContentAlignment="Center" ToolTip="Search by test name or code"
+                             TextChanged="Search_TextChanged"/>
+                </StackPanel>
+                <DataGrid x:Name="TestsGrid" Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Extended"
+                          SelectionUnit="FullRow" SelectionChanged="TestsGrid_SelectionChanged"
+                          IsReadOnly="True" Background="{StaticResource CardBrush}" Foreground="{StaticResource TextBrush}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Code" Binding="{Binding TestCode}" Width="100"/>
+                        <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="*"/>
+                        <DataGridTextColumn Header="Department" Binding="{Binding DepartmentName}" Width="170"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N0}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Border Grid.Column="1" Background="{StaticResource CardBrush}" Margin="14,0,0,0" Padding="18" CornerRadius="10">
+                <StackPanel>
+                    <TextBlock Text="Selected tests" Foreground="{StaticResource TextBrush}" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="Hold Ctrl or Shift to select more than one test."
+                               Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,5,0,12" TextWrapping="Wrap"/>
+                    <ScrollViewer MaxHeight="190" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="SelectedLabel" Foreground="{StaticResource TextBrush}"
+                                   Text="No tests selected." TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                    <Border Height="1" Background="#374151" Margin="0,14,0,12"/>
+                    <TextBlock x:Name="TotalLabel" Text="0 tests • Rs. 0" Foreground="{StaticResource AccentBrush}"
+                               FontSize="19" FontWeight="Bold" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="StatusLabel" Text="Find a patient to begin."
+                       Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"
+                       Margin="0,0,16,0" TextWrapping="Wrap"/>
+            <Button x:Name="CreateOrderButton" Grid.Column="1" Content="Create order" Width="150" Height="42"
+                    Background="{StaticResource AccentBrush}" Foreground="White" FontWeight="SemiBold"
+                    BorderThickness="0" IsEnabled="False" Click="CreateOrder_Click"/>
+        </Grid>
+    </Grid>
+</Window>
