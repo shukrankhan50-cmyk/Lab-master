@@ -1,61 +1,292 @@
 <Window x:Class="LabMaster.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Lab Master" Height="720" Width="1200"
+        Title="Lab Master" Height="760" Width="1280" MinHeight="620" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}">
+    <Window.Resources>
+        <Style x:Key="SectionLabelStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="10,18,0,8"/>
+        </Style>
+        <Style x:Key="NavButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#1F2937"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#263445"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="#052E2B"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="7" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.72"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SecondaryButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="#374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="248"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
-            <DockPanel Margin="18">
-                <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="LAB MASTER" Foreground="{StaticResource TextBrush}" FontSize="24" FontWeight="Bold"/>
-                    <TextBlock Text="Laboratory Information System" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,4,0,28"/>
-                    <Button Content="Dashboard" Click="Dashboard_Click" Height="42" Margin="0,0,0,8" Background="{StaticResource AccentBrush}" Foreground="White" BorderThickness="0" FontSize="14"/>
-                    <Button Content="Patient Registration" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="PatientRegistration_Click"/><Button Content="Patient Search" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="PatientSearch_Click"/>
-                    <Button Content="Accept Test" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="AcceptTest_Click"/><Button Content="Billing" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="Billing_Click"/>
-                    <Button Content="Result Entry (F3)" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="ResultEntry_Click"/>
-                    <Button Content="Reports" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="Reports_Click"/><Button Content="Department Slips" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="DepartmentSlips_Click"/>
-                    <Button Content="Departments" Height="42" Margin="0,0,0,8" Click="Departments_Click"/><Button Content="Users &amp; Roles" Click="User_Click" Margin="0,6,0,6"/><Button Content="Database Backup" Click="Backup_Click" Margin="0,6,0,6"/><Button Content="Expenses" Click="Expense_Click" Margin="0,6,0,6"/><Button Content="Financial Summary" Click="Financial_Click" Margin="0,6,0,6"/><Button Content="Settings" Click="Settings_Click" Margin="0,6,0,6"/><Button Content="Audit Log" Click="Audit_Click" Margin="0,6,0,6"/><Button Content="QC Control" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="QC_Click"/><Button Content="Analyzer / Instruments" Height="42" Margin="0,0,0,8" Click="Analyzer_Click"/><Button Content="Inventory" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="Inventory_Click"/><Button Content="Profile Master" Height="42" Margin="0,0,0,8" Click="Profile_Click"/><Button Content="Test Master" Height="42" Margin="0,0,0,8" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="13" Click="TestMaster_Click"/>
+            <Grid Margin="16,18,12,14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="4,0,4,12">
+                    <TextBlock Text="LAB MASTER" Foreground="{StaticResource TextBrush}" FontSize="22" FontWeight="Bold"/>
+                    <TextBlock Text="LABORATORY WORKSPACE" Foreground="{StaticResource MutedTextBrush}" FontSize="9" FontWeight="SemiBold" Margin="1,4,0,8"/>
+                    <Border Height="1" Background="#263445" Margin="0,8,0,0"/>
                 </StackPanel>
-                <TextBlock DockPanel.Dock="Bottom" Text="Lab Master by Shukran" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-            </DockPanel>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="WORKFLOW" Style="{StaticResource SectionLabelStyle}" Margin="10,4,0,8"/>
+                        <Button Content="Dashboard" Click="Dashboard_Click" Style="{StaticResource NavButtonStyle}" Background="#0E3B35" Foreground="White"/>
+                        <Button Content="Patient Registration" Click="PatientRegistration_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Patient Search" Click="PatientSearch_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Accept Test" Click="AcceptTest_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Billing" Click="Billing_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Result Entry" Click="ResultEntry_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Reports" Click="Reports_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Department Slips" Click="DepartmentSlips_Click" Style="{StaticResource NavButtonStyle}"/>
+
+                        <TextBlock Text="LAB SETUP" Style="{StaticResource SectionLabelStyle}"/>
+                        <Button Content="Departments" Click="Departments_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Test Master" Click="TestMaster_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Profile Master" Click="Profile_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Inventory" Click="Inventory_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="QC Control" Click="QC_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Analyzer / Instruments" Click="Analyzer_Click" Style="{StaticResource NavButtonStyle}"/>
+
+                        <TextBlock Text="FINANCE" Style="{StaticResource SectionLabelStyle}"/>
+                        <Button Content="Expenses" Click="Expense_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Financial Summary" Click="Financial_Click" Style="{StaticResource NavButtonStyle}"/>
+
+                        <TextBlock Text="ADMINISTRATION" Style="{StaticResource SectionLabelStyle}"/>
+                        <Button Content="Users &amp; Roles" Click="User_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Database Backup" Click="Backup_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Settings" Click="Settings_Click" Style="{StaticResource NavButtonStyle}"/>
+                        <Button Content="Audit Log" Click="Audit_Click" Style="{StaticResource NavButtonStyle}"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" BorderBrush="#263445" BorderThickness="0,1,0,0" Padding="4,14,4,0" Margin="4,12,4,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="34" Height="34" CornerRadius="17" Background="#153B36" VerticalAlignment="Center">
+                            <TextBlock Text="LM" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+                            <TextBlock x:Name="CurrentUserName" Text="Signed in" Foreground="{StaticResource TextBrush}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="CurrentUserRole" Text="Lab team" Foreground="{StaticResource MutedTextBrush}" FontSize="10" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </Border>
 
-        <Grid Grid.Column="1" Margin="28">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
-                <TextBlock Text="Dashboard" Foreground="{StaticResource TextBrush}" FontSize="30" FontWeight="SemiBold"/>
-                <TextBlock Text="Laboratory overview and daily activity" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,22"/>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="30,24,30,30">
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Dashboard" Foreground="{StaticResource TextBrush}" FontSize="29" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="WelcomeText" Text="Your laboratory overview" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="{StaticResource CardBrush}" CornerRadius="8" Padding="12,8" Margin="0,0,10,0">
+                            <StackPanel>
+                                <TextBlock Text="TODAY" Foreground="{StaticResource MutedTextBrush}" FontSize="9" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="TodayText" Text="Today" Foreground="{StaticResource TextBrush}" FontSize="12" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Button Content="Refresh" Click="Dashboard_Click" Style="{StaticResource SecondaryButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+
+                <UniformGrid Columns="4" Margin="0,0,0,26">
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Today's patients" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="PatientsCount" Text="0" Foreground="{StaticResource TextBrush}" FontSize="29" FontWeight="Bold" Margin="0,7,0,0"/>
+                            <TextBlock Text="New registrations" Foreground="{StaticResource MutedTextBrush}" FontSize="10" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Pending tests" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="PendingCount" Text="0" Foreground="{StaticResource TextBrush}" FontSize="29" FontWeight="Bold" Margin="0,7,0,0"/>
+                            <TextBlock Text="Awaiting results" Foreground="{StaticResource MutedTextBrush}" FontSize="10" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Reports ready" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="ReadyCount" Text="0" Foreground="{StaticResource TextBrush}" FontSize="29" FontWeight="Bold" Margin="0,7,0,0"/>
+                            <TextBlock Text="Verified orders" Foreground="{StaticResource MutedTextBrush}" FontSize="10" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Padding="18">
+                        <StackPanel>
+                            <TextBlock Text="Today's collection" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="CollectionCount" Text="Rs. 0" Foreground="{StaticResource TextBrush}" FontSize="29" FontWeight="Bold" Margin="0,7,0,0"/>
+                            <TextBlock Text="Payments received today" Foreground="{StaticResource MutedTextBrush}" FontSize="10" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <Grid Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Quick actions" Foreground="{StaticResource TextBrush}" FontSize="19" FontWeight="SemiBold"/>
+                        <TextBlock Text="Start a common task without searching through the menu." Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Grid>
+
+                <UniformGrid Columns="4" Margin="0,0,0,24">
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="PATIENTS" Foreground="{StaticResource AccentBrush}" FontSize="9" FontWeight="Bold"/>
+                            <TextBlock Text="Register patient" Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <TextBlock Text="Add patient details and begin a visit." Foreground="{StaticResource MutedTextBrush}" FontSize="10" TextWrapping="Wrap" MinHeight="30" Margin="0,4,0,12"/>
+                            <Button Content="Open registration" Click="PatientRegistration_Click" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="ORDERS" Foreground="{StaticResource AccentBrush}" FontSize="9" FontWeight="Bold"/>
+                            <TextBlock Text="Accept test" Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <TextBlock Text="Create an order for a registered patient." Foreground="{StaticResource MutedTextBrush}" FontSize="10" TextWrapping="Wrap" MinHeight="30" Margin="0,4,0,12"/>
+                            <Button Content="Start an order" Click="AcceptTest_Click" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Margin="0,0,10,0" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="RESULTS" Foreground="{StaticResource AccentBrush}" FontSize="9" FontWeight="Bold"/>
+                            <TextBlock Text="Enter results" Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <TextBlock Text="Record and review test results." Foreground="{StaticResource MutedTextBrush}" FontSize="10" TextWrapping="Wrap" MinHeight="30" Margin="0,4,0,12"/>
+                            <Button Content="Open result entry" Click="ResultEntry_Click" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="{StaticResource CardBrush}" CornerRadius="11" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="REPORTS" Foreground="{StaticResource AccentBrush}" FontSize="9" FontWeight="Bold"/>
+                            <TextBlock Text="Find a report" Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <TextBlock Text="Review verified results and print reports." Foreground="{StaticResource MutedTextBrush}" FontSize="10" TextWrapping="Wrap" MinHeight="30" Margin="0,4,0,12"/>
+                            <Button Content="Open reports" Click="Reports_Click" Style="{StaticResource PrimaryActionButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <Border Background="{StaticResource CardBrush}" CornerRadius="11" Padding="20" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,14,0">
+                            <TextBlock Text="Daily workflow" Foreground="{StaticResource TextBrush}" FontSize="17" FontWeight="SemiBold"/>
+                            <TextBlock Text="Follow these steps for a typical lab visit." Foreground="{StaticResource MutedTextBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <UniformGrid Grid.Column="1" Columns="5">
+                            <StackPanel Margin="4,0">
+                                <TextBlock Text="01" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Text="Register" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                <TextBlock Text="Patient details" Foreground="{StaticResource MutedTextBrush}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Margin="4,0">
+                                <TextBlock Text="02" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Text="Order" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                <TextBlock Text="Select tests" Foreground="{StaticResource MutedTextBrush}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Margin="4,0">
+                                <TextBlock Text="03" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Text="Bill" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                <TextBlock Text="Record payment" Foreground="{StaticResource MutedTextBrush}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Margin="4,0">
+                                <TextBlock Text="04" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Text="Results" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                <TextBlock Text="Enter and verify" Foreground="{StaticResource MutedTextBrush}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Margin="4,0">
+                                <TextBlock Text="05" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <TextBlock Text="Report" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                <TextBlock Text="Print for patient" Foreground="{StaticResource MutedTextBrush}" FontSize="9" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+                </Border>
+
+                <TextBlock x:Name="DashboardStatusText" Text="Loading today's summary..." Foreground="{StaticResource MutedTextBrush}" FontSize="10"/>
             </StackPanel>
-            <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,22">
-                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
-                    <StackPanel><TextBlock Text="Today's Patients" Foreground="{StaticResource MutedTextBrush}"/><TextBlock x:Name="PatientsCount" Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
-                </Border>
-                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
-                    <StackPanel><TextBlock Text="Pending Tests" Foreground="{StaticResource MutedTextBrush}"/><TextBlock x:Name="PendingCount" Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
-                </Border>
-                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Margin="0,0,10,0" Padding="18">
-                    <StackPanel><TextBlock Text="Reports Ready" Foreground="{StaticResource MutedTextBrush}"/><TextBlock x:Name="ReadyCount" Text="0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
-                </Border>
-                <Border Background="{StaticResource CardBrush}" CornerRadius="10" Padding="18">
-                    <StackPanel><TextBlock Text="Today's Collection" Foreground="{StaticResource MutedTextBrush}"/><TextBlock x:Name="CollectionCount" Text="Rs. 0" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,6,0,0"/></StackPanel>
-                </Border>
-            </UniformGrid>
-            <Border Grid.Row="2" Background="{StaticResource CardBrush}" CornerRadius="10" Padding="24">
-                <StackPanel>
-                    <TextBlock Text="Lab Master is ready" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
-                    <TextBlock Text="Core registration, test ordering, result entry, billing, QC, inventory, profiles and reporting modules are connected. Continue using the dashboard to manage daily laboratory operations." Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" Margin="0,10,0,0"/>
-                </StackPanel>
-            </Border>
-        </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -10,20 +10,36 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        var user = CurrentUserContext.User;
+        var displayName = string.IsNullOrWhiteSpace(user?.DisplayName)
+            ? CurrentUserContext.UserName
+            : user.DisplayName;
+
+        WelcomeText.Text = $"Welcome back, {displayName}. Here's today's lab overview.";
+        CurrentUserName.Text = displayName;
+        CurrentUserRole.Text = user?.RoleName ?? "Lab team";
+        TodayText.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+
         Loaded += async (_, _) => await RefreshDashboardAsync();
     }
 
     async Task RefreshDashboardAsync()
     {
+        DashboardStatusText.Text = "Refreshing today's summary...";
         try
         {
-            var s = await dashboard.GetAsync();
-            PatientsCount.Text = s.TodayPatients.ToString();
-            PendingCount.Text = s.PendingTests.ToString();
-            ReadyCount.Text = s.ReportsReady.ToString();
-            CollectionCount.Text = $"Rs. {s.TodayCollection:N0}";
+            var stats = await dashboard.GetAsync();
+            PatientsCount.Text = stats.TodayPatients.ToString();
+            PendingCount.Text = stats.PendingTests.ToString();
+            ReadyCount.Text = stats.ReportsReady.ToString();
+            CollectionCount.Text = $"Rs. {stats.TodayCollection:N0}";
+            DashboardStatusText.Text = $"Last refreshed at {DateTime.Now:hh:mm tt}";
         }
-        catch { }
+        catch
+        {
+            DashboardStatusText.Text = "Summary unavailable. Check the SQL Server connection, then select Refresh.";
+        }
     }
 
     bool Allowed(string permission)
@@ -50,7 +66,7 @@ public partial class MainWindow : Window
     private void Financial_Click(object sender, RoutedEventArgs e) { if (Allowed("Finance")) new FinancialReportWindow { Owner = this }.ShowDialog(); }
     private void Settings_Click(object sender, RoutedEventArgs e) { if (Allowed("Administration")) new SettingsWindow { Owner = this }.ShowDialog(); }
     private void Audit_Click(object sender, RoutedEventArgs e) { if (Allowed("Administration")) new AuditWindow { Owner = this }.ShowDialog(); }
- private void QC_Click(object sender,RoutedEventArgs e){if(Allowed("QC"))new QCWindow{Owner=this}.ShowDialog();}
- private void Analyzer_Click(object sender,RoutedEventArgs e){if(Allowed("MasterData"))new AnalyzerWindow{Owner=this}.ShowDialog();}
-    private void Inventory_Click(object sender,RoutedEventArgs e){if(Allowed("Inventory"))new InventoryWindow{Owner=this}.ShowDialog();}
+    private void QC_Click(object sender, RoutedEventArgs e) { if (Allowed("QC")) new QCWindow { Owner = this }.ShowDialog(); }
+    private void Analyzer_Click(object sender, RoutedEventArgs e) { if (Allowed("MasterData")) new AnalyzerWindow { Owner = this }.ShowDialog(); }
+    private void Inventory_Click(object sender, RoutedEventArgs e) { if (Allowed("Inventory")) new InventoryWindow { Owner = this }.ShowDialog(); }
 }
