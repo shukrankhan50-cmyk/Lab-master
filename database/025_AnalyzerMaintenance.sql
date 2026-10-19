@@ -1,7 +1,13 @@
 USE LabMasterDb;
 GO
 
-IF OBJECT_ID('dbo.AnalyzerMaintenance','U') IS NULL
+-- This migration depends on the analyzer table created by script 022.
+IF OBJECT_ID(N'dbo.Analyzers', N'U') IS NULL
+BEGIN
+    ;THROW 51000, 'Run 022_AnalyzerMaster.sql before 025_AnalyzerMaintenance.sql.', 1;
+END;
+
+IF OBJECT_ID(N'dbo.AnalyzerMaintenance', N'U') IS NULL
 BEGIN
     CREATE TABLE dbo.AnalyzerMaintenance
     (
@@ -16,12 +22,34 @@ BEGIN
         CertificateNumber NVARCHAR(100) NULL,
         Result NVARCHAR(80) NULL,
         Notes NVARCHAR(500) NULL,
-        CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-        CONSTRAINT FK_AnalyzerMaintenance_Analyzer
-            FOREIGN KEY(AnalyzerId) REFERENCES dbo.Analyzers(AnalyzerId)
+        CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME()
     );
+END;
 
-    CREATE INDEX IX_AnalyzerMaintenance_AnalyzerDate
-        ON dbo.AnalyzerMaintenance(AnalyzerId, MaintenanceDate DESC);
-END
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.foreign_keys
+    WHERE name = N'FK_AnalyzerMaintenance_Analyzer'
+      AND parent_object_id = OBJECT_ID(N'dbo.AnalyzerMaintenance', N'U')
+)
+BEGIN
+    EXEC sys.sp_executesql
+        N'ALTER TABLE dbo.AnalyzerMaintenance
+          ADD CONSTRAINT FK_AnalyzerMaintenance_Analyzer
+          FOREIGN KEY (AnalyzerId) REFERENCES dbo.Analyzers(AnalyzerId);';
+END;
+
+IF NOT EXISTS
+(
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N'IX_AnalyzerMaintenance_AnalyzerDate'
+      AND object_id = OBJECT_ID(N'dbo.AnalyzerMaintenance', N'U')
+)
+BEGIN
+    EXEC sys.sp_executesql
+        N'CREATE INDEX IX_AnalyzerMaintenance_AnalyzerDate
+          ON dbo.AnalyzerMaintenance(AnalyzerId, MaintenanceDate DESC);';
+END;
 GO
