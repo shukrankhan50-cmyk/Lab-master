@@ -27,7 +27,8 @@
                 <StackPanel>
                     <TextBlock Text="Patient MR number" Foreground="{StaticResource MutedTextBrush}" FontSize="11" FontWeight="SemiBold"/>
                     <TextBox x:Name="MrBox" Height="38" Padding="10,0" Margin="0,5,0,0"
-                             VerticalContentAlignment="Center" ToolTip="Enter the patient's MR number"/>
+                             VerticalContentAlignment="Center" ToolTip="Enter the patient's MR number"
+                             TextChanged="MrBox_TextChanged"/>
                 </StackPanel>
                 <Button Grid.Column="1" Content="Find patient" Width="120" Height="38" Margin="10,20,18,0"
                         Click="FindPatient_Click"/>
@@ -63,7 +64,7 @@
                         <DataGridTextColumn Header="Code" Binding="{Binding TestCode}" Width="100"/>
                         <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="*"/>
                         <DataGridTextColumn Header="Department" Binding="{Binding DepartmentName}" Width="170"/>
-                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=N0}" Width="100"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:N0}}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -78,7 +79,7 @@
                                    Text="No tests selected." TextWrapping="Wrap"/>
                     </ScrollViewer>
                     <Border Height="1" Background="#374151" Margin="0,14,0,12"/>
-                    <TextBlock x:Name="TotalLabel" Text="0 tests • Rs. 0" Foreground="{StaticResource AccentBrush}"
+                    <TextBlock x:Name="TotalLabel" Text="0 tests  •  Rs. 0" Foreground="{StaticResource AccentBrush}"
                                FontSize="19" FontWeight="Bold" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
