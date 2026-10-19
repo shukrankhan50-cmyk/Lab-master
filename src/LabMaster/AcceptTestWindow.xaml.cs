@@ -8,6 +8,7 @@ public partial class AcceptTestWindow : Window
 {
     private readonly TestOrderService service = new();
     private int? patientId;
+    private int patientSearchVersion;
     private bool isLoadingTests;
     private CancellationTokenSource? searchDelay;
 
@@ -82,6 +83,7 @@ public partial class AcceptTestWindow : Window
             return;
         }
 
+        var searchVersion = ++patientSearchVersion;
         patientId = null;
         PatientLabel.Text = "Searching for patient...";
         UpdateCreateOrderState();
@@ -90,6 +92,15 @@ public partial class AcceptTestWindow : Window
         {
             var search = new PatientSearchService();
             var matches = await search.SearchAsync(mrNumber);
+            if (searchVersion != patientSearchVersion) return;
+
+            if (!string.Equals(MrBox.Text.Trim(), mrNumber, StringComparison.OrdinalIgnoreCase))
+            {
+                PatientLabel.Text = "MR number changed. Search again.";
+                StatusLabel.Text = "Confirm the current MR number before creating an order.";
+                return;
+            }
+
             var match = matches.Find(x =>
                 x.MRNumber.Equals(mrNumber, StringComparison.OrdinalIgnoreCase));
 
@@ -107,8 +118,11 @@ public partial class AcceptTestWindow : Window
         }
         catch
         {
-            PatientLabel.Text = "Patient details unavailable.";
-            StatusLabel.Text = "Patient search failed. Check the SQL Server connection and try again.";
+            if (searchVersion == patientSearchVersion)
+            {
+                PatientLabel.Text = "Patient details unavailable.";
+                StatusLabel.Text = "Patient search failed. Check the SQL Server connection and try again.";
+            }
         }
         finally
         {
@@ -118,11 +132,12 @@ public partial class AcceptTestWindow : Window
 
     private void MrBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (patientId is null) return;
-
+        patientSearchVersion++;
         patientId = null;
-        PatientLabel.Text = "Search again to confirm this MR number.";
-        StatusLabel.Text = "The MR number changed. Find the patient again before creating an order.";
+        PatientLabel.Text = string.IsNullOrWhiteSpace(MrBox.Text)
+            ? "No patient selected"
+            : "Search again to confirm this MR number.";
+        StatusLabel.Text = "Find the patient using the current MR number before creating an order.";
         UpdateCreateOrderState();
     }
 
