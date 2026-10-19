@@ -9,6 +9,9 @@ public partial class App : Application
  {
   base.OnStartup(e);
 
+  // Keep the application alive while activation/login dialogs are shown.
+  ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
   var license = new LicenseService().GetStatus();
   if (!license.IsActive)
   {
@@ -32,6 +35,7 @@ public partial class App : Application
 
   var main = new MainWindow();
   MainWindow = main;
+  ShutdownMode = ShutdownMode.OnMainWindowClose;
   main.Show();
  }
 }
