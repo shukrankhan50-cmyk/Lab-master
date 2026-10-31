@@ -1,21 +1,24 @@
 # Lab Master License Issuer
 
-Developer-side tooling for issuing signed 90-day activation keys.
+Developer-side tooling for creating compact, digitally signed 90-day shared activation keys.
 
 ## Security
 
-- Keep the RSA private key outside GitHub and outside the installed application.
-- The application contains only the matching RSA public key.
-- Never commit the private key to this repository.
+- Keep `LabMaster-Shared-License-Private.pem` outside GitHub and outside the installed application.
+- The application contains only the matching ECDSA P-256 public key.
+- Never commit or distribute the private signing key.
+- A shared activation key is a bearer credential; give it only to people who should activate Lab Master.
 
 ## Issuing a key
 
-1. Get the PC Activation ID from the Lab Master activation screen.
-2. On the secure licensing PC with PowerShell 7, run:
+On the secure licensing PC with PowerShell 7, run:
 
-powershell -ExecutionPolicy Bypass -File .\Issue-License.ps1 -MachineId "PC_ACTIVATION_ID" -PrivateKeyPath "C:\Secure\labmaster-license-private.pem"
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Issue-License.ps1 -PrivateKeyPath "C:\Secure\LabMaster-Shared-License-Private.pem"
+```
 
-3. The script defaults to 90 days. Production Lab Master licenses should use 90 days.
-4. Give the resulting activation token to the customer for that specific PC.
+The script creates one compact key valid for exactly 90 days. The same key works on any PC and does not require a PC Activation ID. Give the activation token to the intended Lab Master users.
 
-The public key embedded in the application must always match the private signing key used by this issuer.
+Previously issued RSA activation keys remain accepted by the application and remain bound to their original PC.
+
+The ECDSA public key embedded in the application must match the private signing key used by this issuer.
