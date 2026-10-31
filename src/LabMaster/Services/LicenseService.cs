@@ -1,4 +1,6 @@
+using System.Buffers.Binary;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +10,12 @@ namespace LabMaster.Services;
 
 public sealed class LicenseService
 {
-    const string PublicKeyPem = @"-----BEGIN PUBLIC KEY-----
+    const string SharedPublicKeyPem = @"-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8lQNP8holPrjuAk8DsWlJKdeK/af
+nPkkJbUO05MrLqqrbNLxk+p7Gu55+krrFyOazO++cppRoUCyz5Iu0c8xdg==
+-----END PUBLIC KEY-----";
+
+    const string LegacyRsaPublicKeyPem = @"-----BEGIN PUBLIC KEY-----
 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA34oZ87yMRfu4harzhWvj
 4Fr5aN1Xt+quabY0diYJxPY8u8PJZg9fF/W8TQ5OXadF+IzkQki7fhdo5PZujUA7
 C0PAJs1Ne4O1/r7j+sDhLJOTZZ9uz1IcVgsbx7LvBWdyp1tdI7IUbuDbuM4qBGht
@@ -31,14 +38,15 @@ mVD+JRe2JVJ8tyaA2H3OW+1njNylLz5BDqrCWWLrtDgFAgMBAAE=
             if (!File.Exists(LicensePath))
                 return LicenseStatus.Inactive("Activation required.");
 
-            var token = File.ReadAllText(LicensePath).Trim();
+            var token = NormalizeActivationInput(File.ReadAllText(LicensePath));
             if (!TryVerify(token, out var license))
                 return LicenseStatus.Inactive("Invalid activation key.");
 
             if (!string.Equals(license.Product, "LabMaster", StringComparison.Ordinal))
                 return LicenseStatus.Inactive("Invalid product license.");
 
-            if (!string.Equals(license.MachineId, GetMachineId(), StringComparison.Ordinal))
+            if (!IsSharedLicense(license)
+                && !string.Equals(license.MachineId, GetMachineId(), StringComparison.Ordinal))
                 return LicenseStatus.Inactive("This activation key belongs to another PC.");
 
             if (DateTimeOffset.UtcNow > license.ExpiresAt)
@@ -54,15 +62,22 @@ mVD+JRe2JVJ8tyaA2H3OW+1njNylLz5BDqrCWWLrtDgFAgMBAAE=
 
     public bool Activate(string token, out string message)
     {
-        token = token.Trim();
+        token = NormalizeActivationInput(token);
         if (!TryVerify(token, out var license)) { message = "Invalid activation key."; return false; }
         if (!string.Equals(license.Product, "LabMaster", StringComparison.Ordinal)) { message = "This key is not for Lab Master."; return false; }
-        if (!string.Equals(license.MachineId, GetMachineId(), StringComparison.Ordinal)) { message = "This activation key belongs to another PC."; return false; }
+        if (!IsSharedLicense(license)
+            && !string.Equals(license.MachineId, GetMachineId(), StringComparison.Ordinal))
+        {
+            message = "This activation key belongs to another PC.";
+            return false;
+        }
         if (DateTimeOffset.UtcNow > license.ExpiresAt) { message = "This activation key has already expired."; return false; }
 
         Directory.CreateDirectory(LicenseDirectory);
         File.WriteAllText(LicensePath, token, Encoding.UTF8);
-        message = $"Activation successful. Valid until {license.ExpiresAt:dd-MMM-yyyy}.";
+        message = IsSharedLicense(license)
+            ? $"Activation successful on this PC. This shared key works on any PC until {license.ExpiresAt:dd-MMM-yyyy}."
+            : $"Activation successful. Valid until {license.ExpiresAt:dd-MMM-yyyy}.";
         return true;
     }
 
@@ -76,7 +91,61 @@ mVD+JRe2JVJ8tyaA2H3OW+1njNylLz5BDqrCWWLrtDgFAgMBAAE=
         return Convert.ToHexString(sha.ComputeHash(Encoding.UTF8.GetBytes("LabMaster|" + machineGuid)));
     }
 
+    static bool IsSharedLicense(LicensePayload license) =>
+        string.Equals(license.MachineId, "*", StringComparison.Ordinal);
+
+    static string NormalizeActivationInput(string value) =>
+        string.Concat(value.Where(character => !char.IsWhiteSpace(character)));
+
     static bool TryVerify(string token, out LicensePayload license)
+    {
+        license = new LicensePayload();
+        if (token.StartsWith("LM1.", StringComparison.Ordinal))
+            return TryVerifyCompact(token, out license);
+
+        return TryVerifyLegacy(token, out license);
+    }
+
+    static bool TryVerifyCompact(string token, out LicensePayload license)
+    {
+        license = new LicensePayload();
+        try
+        {
+            var parts = token.Split('.');
+            if (parts.Length != 3 || !string.Equals(parts[0], "LM1", StringComparison.Ordinal))
+                return false;
+
+            var payloadBytes = Base64UrlDecode(parts[1]);
+            var signature = Base64UrlDecode(parts[2]);
+            if (payloadBytes.Length != 17 || payloadBytes[0] != 1 || signature.Length != 64)
+                return false;
+
+            using var ecdsa = ECDsa.Create();
+            ecdsa.ImportFromPem(SharedPublicKeyPem);
+            if (!ecdsa.VerifyData(payloadBytes, signature, HashAlgorithmName.SHA256,
+                    DSASignatureFormat.IeeeP1363FixedFieldConcatenation))
+                return false;
+
+            var issuedAt = BinaryPrimitives.ReadUInt32BigEndian(payloadBytes.AsSpan(1, 4));
+            var expiresAt = BinaryPrimitives.ReadUInt32BigEndian(payloadBytes.AsSpan(5, 4));
+            license = new LicensePayload
+            {
+                Product = "LabMaster",
+                MachineId = "*",
+                IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedAt),
+                ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresAt),
+                LicenseId = Convert.ToHexString(payloadBytes.AsSpan(9, 8))
+            };
+            return true;
+        }
+        catch
+        {
+            license = new LicensePayload();
+            return false;
+        }
+    }
+
+    static bool TryVerifyLegacy(string token, out LicensePayload license)
     {
         license = new LicensePayload();
         try
@@ -86,13 +155,17 @@ mVD+JRe2JVJ8tyaA2H3OW+1njNylLz5BDqrCWWLrtDgFAgMBAAE=
             var payloadBytes = Base64UrlDecode(parts[0]);
             var signature = Base64UrlDecode(parts[1]);
             using var rsa = RSA.Create();
-            rsa.ImportFromPem(PublicKeyPem);
+            rsa.ImportFromPem(LegacyRsaPublicKeyPem);
             if (!rsa.VerifyData(payloadBytes, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)) return false;
             var json = Encoding.UTF8.GetString(payloadBytes);
             license = JsonSerializer.Deserialize<LicensePayload>(json) ?? new LicensePayload();
             return true;
         }
-        catch { return false; }
+        catch
+        {
+            license = new LicensePayload();
+            return false;
+        }
     }
 
     static byte[] Base64UrlDecode(string value)
