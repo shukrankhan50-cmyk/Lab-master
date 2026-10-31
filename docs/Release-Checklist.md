@@ -18,6 +18,7 @@
 - [ ] Create a backup before first production use.
 - [ ] Test restore on a separate database before relying on backups.
 - [ ] Keep license private-key material outside the application repository.
+- [ ] Confirm one shared activation key works on at least two PCs and respects its 90-day expiry.
 
 ## Production
 - [ ] Publish win-x64 build.
