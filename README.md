@@ -27,7 +27,6 @@ The core LIS workflow and supporting management modules are implemented in .NET 
 - First-login password setup and PBKDF2-SHA256 password hashing
 - Expenses and financial/management reports
 - Database backup and restore
-- Digitally signed shared activation keys for multiple PCs
 - Windows x64 publishing/deployment documentation
 
 ## Technology
@@ -53,7 +52,7 @@ The default application connection is configured in `src/LabMaster/Data/Database
 6. Test registration → order → billing → result → verification → report → print/PDF.
 7. Test database backup and restore on the target environment.
 8. Publish the Windows x64 application using `tools/Publish-LabMaster.ps1`.
-9. Issue signed 90-day shared licenses with the ECDSA P-256 issuer. Keep the private signing key outside GitHub and the installed application.
+9. Start Lab Master and sign in. No activation key is required.
 
 ## Security and data integrity
 
@@ -69,17 +68,9 @@ The default application connection is configured in `src/LabMaster/Data/Database
 
 A true specimen/sample collection and received workflow is intentionally deferred because it requires additional sample-specific database design and operational rules. The current application workflow does not pretend that this module is complete.
 
-## Licensing & Activation
+## Startup
 
-Lab Master supports digitally signed shared activation keys.
-
-- One shared key can be activated on any PC; it is not tied to a machine ID.
-- Shared production activation keys are valid for 90 days.
-- Previously issued RSA keys remain supported and stay bound to their original PC.
-- Expired or invalid activation blocks normal startup.
-- The application contains only the ECDSA public signing key; keep the private signing key securely with the software owner and never commit it.
-- Activation data is stored locally under Windows common application data.
-- Offline activation is supported.
+Lab Master opens directly to sign-in. Activation keys and PC activation IDs are no longer required.
 
 ## Developer
 
