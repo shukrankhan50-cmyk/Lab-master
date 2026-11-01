@@ -1,0 +1,40 @@
+name: Package updated Lab Master for Windows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/LabMaster/**"
+      - ".github/workflows/package-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish Windows x64 app
+        shell: pwsh
+        run: dotnet publish src/LabMaster/LabMaster.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o "${{ runner.temp }}\LabMaster"
+
+      - name: Create ZIP package
+        shell: pwsh
+        run: Compress-Archive -Path "${{ runner.temp }}\LabMaster\*" -DestinationPath "${{ runner.temp }}\LabMaster-Updated-win-x64.zip" -Force
+
+      - name: Upload ready-to-use ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: LabMaster-Updated-win-x64
+          path: "${{ runner.temp }}\LabMaster-Updated-win-x64.zip"
+          if-no-files-found: error
+          retention-days: 30
