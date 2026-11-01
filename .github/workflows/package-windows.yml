@@ -25,16 +25,16 @@ jobs:
 
       - name: Publish Windows x64 app
         shell: pwsh
-        run: dotnet publish src/LabMaster/LabMaster.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o "${{ runner.temp }}\LabMaster"
+        run: dotnet publish src/LabMaster/LabMaster.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o "$env:RUNNER_TEMP/LabMaster"
 
       - name: Create ZIP package
         shell: pwsh
-        run: Compress-Archive -Path "${{ runner.temp }}\LabMaster\*" -DestinationPath "${{ runner.temp }}\LabMaster-Updated-win-x64.zip" -Force
+        run: Compress-Archive -Path "$env:RUNNER_TEMP/LabMaster/*" -DestinationPath "$env:RUNNER_TEMP/LabMaster-Updated-win-x64.zip" -Force
 
       - name: Upload ready-to-use ZIP
         uses: actions/upload-artifact@v4
         with:
           name: LabMaster-Updated-win-x64
-          path: "${{ runner.temp }}\LabMaster-Updated-win-x64.zip"
+          path: ${{ runner.temp }}/LabMaster-Updated-win-x64.zip
           if-no-files-found: error
           retention-days: 30
