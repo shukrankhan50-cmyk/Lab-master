@@ -1,5 +1,4 @@
 using System.Windows;
-using LabMaster.Services;
 
 namespace LabMaster;
 
@@ -9,19 +8,8 @@ public partial class App : Application
  {
   base.OnStartup(e);
 
-  // Keep the application alive while activation/login dialogs are shown.
+  // Keep the application alive while the login dialog is shown.
   ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-  var license = new LicenseService().GetStatus();
-  if (!license.IsActive)
-  {
-   var activation = new ActivationWindow();
-   if (activation.ShowDialog() != true)
-   {
-    Shutdown();
-    return;
-   }
-  }
 
   var login = new LoginWindow();
   if (login.ShowDialog() != true)
