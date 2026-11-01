@@ -6,6 +6,11 @@ on:
     paths:
       - "src/LabMaster/**"
       - ".github/workflows/package-windows.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/LabMaster/**"
+      - ".github/workflows/package-windows.yml"
   workflow_dispatch:
 
 permissions:
